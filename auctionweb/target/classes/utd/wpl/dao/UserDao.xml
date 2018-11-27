@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- mapper接口代理实现编写规则： 
+	1.映射文件中namespace要等于接口的全限定类名
+	2.映射文件中sql语句的id要等于接口方法名称 
+	3.映射文件中传入参数类型要等于接口方法的传入类型 
+	4.映射文件中返回结果类型要等于接口方法的返回值类型 -->
+<mapper namespace="utd.wpl.dao.UserDao">
+	
+	<!-- ========sql语句======== -->
+	
+	<!-- 1.查询用户 -->
+	<select id="findUserByUserName" parameterType="string" resultType="user">
+		select * from user where username = #{username}
+	</select>
+	
+	<!-- 2.用户注册 -->
+	<insert id="insertUser" parameterType="user">
+		insert into user(username, password, last_visit, email, phone, photo) values(#{username}, #{password}, #{last_visit}, #{email}, #{phone}, #{photo})
+	</insert>
+	
+	<!-- 3.更新最后访问时间 -->
+	<insert id="updateLastVisit" parameterType="user">
+		update user set last_visit = #{last_visit} where username = #{username}
+	</insert>
+	
+	<!-- 4.更新最后访问时间 -->
+	<insert id="updatePhoto" parameterType="user">
+		update user set photo = #{photo} where username = #{username}
+	</insert>
+	
+</mapper>

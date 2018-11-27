@@ -1,0 +1,21 @@
+body {
+	background-color: #EEEEEE;
+}
+
+#div-main {
+	position: relative;
+	border-radius: 10px;
+	padding: 20px;
+	width: 400px;
+	height: 100px;
+	background-color: #fff;
+}
+
+#div-title {
+	color: #4AA4B4;
+	font-size: 35px;
+	padding-bottom: 5px;
+}
+
+
+

@@ -1,0 +1,173 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?hbkz1y');
+  src:  url('../fonts/icomoon.eot?hbkz1y#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?hbkz1y') format('truetype'),
+    url('../fonts/icomoon.woff?hbkz1y') format('woff'),
+    url('../fonts/icomoon.svg?hbkz1y#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+	background-color: #EEEEEE;
+}
+
+#div-out {
+	position: relative;
+	top: 60px;
+}
+
+#div-main {
+	position: relative;
+	border-radius: 10px;
+	padding: 20px;
+	width: 500px;
+	height: 270px;
+	background-color: #fff;
+}
+
+#div-title {
+	color: #4AA4B4;
+	font-size: 40px;
+	padding-bottom: 5px;
+}
+
+#table-form{
+	width: 100%;
+	font-size: 25px;
+	height:200px;
+}
+
+tr td {
+	text-align: center; 
+	cellspacing:50;
+}
+
+#td-meg-div {
+	border: 1px solid #FACCC6;
+	background-color: #FFEBEB;
+	width: 100%;
+	height: 22px;
+	font-size: 14px;
+	color: red;
+}
+
+.input-class {
+	width: 100%;
+	height: 32px;
+	font-size: 15px;
+	text-indent:7px;
+	background-color:#fff;
+	box-shadow:0 0 2px #FFEFD5;
+	/*边框圆角并去阴影*/
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-ms-border-radius: 4px;
+	-o-border-radius: 4px;
+	border-radius: 4px;
+	border: 1px solid #c0c0c0;
+	outline:none;
+}
+
+
+.icon-td-un {
+	width: 10%;
+}
+
+.icon-td-ps {
+	width: 10%;
+}
+
+.icon-td-un:before {
+	content: "\e900";
+}
+
+.icon-td-ps:before {
+	content: "\e901";
+}
+
+hr {
+    margin-top:7px;
+    margin-left:37px;
+    *margin: 0;
+    border: 0;
+    color: #e0e0e0;
+    background-color: #e0e0e0; 
+    height: 1px;
+    width:90%;
+}
+a{
+	text-decoration:none;
+	color:#4AA4B4;
+	font-size:16px;
+}
+a:hover{
+	color: #008080;
+	text-decoration:underline;
+}
+
+
+/* button 
+---------------------------------------------- */
+.button {
+	display: inline-block;
+	zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+	*display: inline;
+	vertical-align: baseline;
+	margin: 0 2px;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	font: 15px/100% Arial, Helvetica, sans-serif;
+	padding: .5em 2em .55em;
+	text-shadow: 0 1px 1px rgba(0,0,0,.3);
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .3em;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	width:210px;
+}
+.button:hover {
+	text-decoration: none;
+}
+.button:active {
+	position: relative;
+	top: 0.5px;
+}
+
+
+.white {
+	color: #3CB3D6;
+	border: solid 1px #b7b7b7;
+	background: #fff;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed));
+	background: -moz-linear-gradient(top,  #fff,  #ededed);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed');
+}
+.white:hover {
+	background: #ededed;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc));
+	background: -moz-linear-gradient(top,  #fff,  #dcdcdc);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dcdcdc');
+}
+
+
