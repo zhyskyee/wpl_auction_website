@@ -18,10 +18,40 @@
 	<mvc:annotation-driven />
 
 	<!-- 3. 配置视图解析器，在Controller中返回视图不需要写全名称 -->
-	<bean
+	<!-- <bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/"></property>
 		<property name="suffix" value=".jsp"></property>
+	</bean> -->
+	<bean id="contentNegotiationManager"  class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="favorPathExtension" value="true" />
+        <property name="ignoreAcceptHeader" value="true"/>
+        <property name="useJaf" value="false"/>
+        <property name="defaultContentType" value="text/html" />
+
+        <property name="mediaTypes">
+            <map>
+              <entry key="json" value="application/json"/>
+              <entry key="html" value="text/html"/>
+           </map>
+        </property>
+    </bean>
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+	    <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+	    <property name="viewResolvers">
+	        <list>
+	            <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                    <property name="prefix" value="/WEB-INF/jsp/"></property>
+                    <property name="suffix" value=".jsp"></property>
+                    <property name="order" value="2"></property>
+                </bean>
+	        </list>
+	    </property>
+	    <property name="defaultViews">
+	        <list>
+	            <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+	        </list>
+	    </property>
 	</bean>
 
 	<!-- 4.配置资源映射，下面的资源不进行拦截 -->

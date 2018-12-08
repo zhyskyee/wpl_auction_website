@@ -19,10 +19,31 @@
         <log4j.version>1.2.12</log4j.version>
         <!-- junit版本号 -->
         <junit.version>4.10</junit.version>
+        <jackson.version>2.9.5</jackson.version>
   </properties>
   
   <dependencies>
+  		<dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.5</version>
+        </dependency>
         <!-- Spring -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -72,7 +93,6 @@
 		    <artifactId>mybatis</artifactId>
 		    <version>${mybatis.version}</version>
 		</dependency>
-		        
         <!-- https://mvnrepository.com/artifact/commons-dbcp/commons-dbcp -->
 		<dependency>
 		    <groupId>commons-dbcp</groupId>
@@ -117,6 +137,14 @@
         </dependency>
 
         <!-- 日志文件管理包 -->
+        
+        <!-- http://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.3/httpclient-4.5.3.jar -->
+		<dependency>
+   		 <groupId>org.apache.httpcomponents</groupId>
+   		 <artifactId>httpclient</artifactId>
+    	 <version>4.5.3</version>
+		</dependency>
+        
         <!-- log start -->
         <dependency>
             <groupId>log4j</groupId>
@@ -134,7 +162,22 @@
             <version>${slf4j.version}</version>
         </dependency>
         <!-- log end -->
+		
+		<dependency>
+      <groupId>com.github.kevinsawicki</groupId>
+      <artifactId>http-request</artifactId>
+      <version>5.6</version>
+    </dependency>
 
+		
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20140107</version>
+		</dependency>
+		
+		
         <!--spring单元测试依赖 -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -177,7 +220,7 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<configuration>
 					<path>/</path>
-					<port>8989</port>
+					<port>8080</port>
 				</configuration>
 			</plugin>
 			<!-- java编译插件 -->
