@@ -1,18 +1,19 @@
 $(document).ready(function() {
-	$("#select").click(
+	$("#selectbutton").click(
 			function(e) {
 				e.preventDefault();
-				var start_time1 = $("#username").val();
-				var end_time1 = $("#password").val();
+				var start_time1 = $("#start_time").val();
+				var end_time1 = $("#end_time").val();
 				start_time = start_time1 +" "+"00:00:00";
 				end_time = end_time1 +" "+"00:00:00";
+				console.log(start_time1);
 				
 				$.ajax({
 					url : "http://localhost:8080/item/all",
 					type : 'get',
 					dataType : 'text',
 					contentType : "application/json;charset=utf-8",
-					data : JSON.stringify({
+					data : ({
 						'start_time' : start_time,
 						'end_time' : end_time
 					}),
@@ -50,6 +51,7 @@ $(document).ready(function() {
 //			            		console.log( data2[i].auction_date);
 //			            		console.log( data2[i].min_price);
 			            }
+					},
 					error : function(err) {
 						alert("Error loading JS File"
 								+ err);

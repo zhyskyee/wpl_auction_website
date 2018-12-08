@@ -290,6 +290,11 @@
 					<source>1.7</source>
 					<target>1.7</target>
 					<encoding>UTF-8</encoding>
+					<compression>on</compression>
+         <compressionMinSize>128</compressionMinSize> 
+        <compressibleMimeType>text/html,text/xml,text/plain,text/json,text/css,text/javascript,application/json,application/javascript</compressibleMimeType> 
+      <noCompressionUserAgents>gozilla, traviata</noCompressionUserAgents>
+      <connectionTimeout>20000</connectionTimeout>
 				</configuration>
 			</plugin>
 		</plugins>

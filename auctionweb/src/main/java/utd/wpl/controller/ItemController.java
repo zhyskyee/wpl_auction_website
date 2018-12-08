@@ -368,6 +368,7 @@ public class ItemController {
 			// 第二步：创建httpPost对象
 
 			URIBuilder builder = new URIBuilder("http://localhost:8989/item/all");
+			
 			builder.addParameter("start_time", startTime);
 			builder.addParameter("end_time", endTime);
 			// 第二步：创建httpPost对象
@@ -380,7 +381,7 @@ public class ItemController {
 			// Response Body
 			String responseBody = responseHandler.handleResponse(hr);
 			if (responseBody != null && !responseBody.equals("")) {
-				Gson gson = new Gson();
+				Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
 				List<Item> list = null;
 				try {
 					Type listType = new TypeToken<ArrayList<Item>>(){}.getType();

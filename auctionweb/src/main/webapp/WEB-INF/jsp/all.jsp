@@ -1,9 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="en">
-
- <head>
+<html>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -57,11 +56,48 @@
     </style>
   </head>
 
-
   <body>
     <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">My Order</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+              <a class="nav-link" href="${pageContext.request.contextPath}/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="${pageContext.request.contextPath}/profile">Profile</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="${pageContext.request.contextPath}/order">Order<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="${pageContext.request.contextPath}/sell">Sell</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="${pageContext.request.contextPath}/contact">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  <section>
     <div class="container">
+      <h2>User Order Summary</h1>
+      <hr>
       <div class="row">
+        <!-- left column -->
+        <div class="col-md-3">
+          <div class="text-center">
+            <img src="images/thumbnails.png" class="img-reponsive img-circle" alt="avatar">
+            <h5>Your order's details</h5>
+          </div>
+        </div>
+        <div>
         <form id="all">
          <div class="col-lg-12" style=""><h1>Select a Time Period</h1></div>
              <div class="form-group">
@@ -82,9 +118,13 @@
              </div>
          <button class="btn btn-danger" id="selectbutton">Search!</button>
       </form>
-      <div class="col-lg-12">
-      <table id="dtBasic" class="display datatable table-striped table-bordered table-sm" cellspacing="0" width="100%">
-            <thead>
+        </div>
+
+        <!-- edit form column -->
+        <div class="col-md-9 table-responsive">
+          <h3>Order info</h3>
+           <table id="dtBasic" class="display datatable table-striped table-bordered table-sm" cellspacing="0" width="100%">
+           <thead>
               <tr>
                 <th class="th-sm">Itemid
                   <i class="fa fa-sort" aria-hidden="true"></i>
@@ -109,24 +149,28 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
+            <tbody id="tableAjax">
 
-              </tr>
             </tbody>
             <tfoot>
               <tr>
                 <th></th>
                 <th></th>
                 <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th></th><th></th><th></th>
                 <th></th>
               </tr>
             </tfoot>
           </table>
-        </div>
+          <br><br><br>
+          
+          
+
+      </div>
     </div>
-</body>
+  </div>
+  </section>
+    
+  </body>
+
 </html>

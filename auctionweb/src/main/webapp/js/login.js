@@ -1,4 +1,4 @@
-//localStorage.setItem("state",0);
+localStorage.setItem("state",0);
 $(document)
 		.ready(
 				function() {
