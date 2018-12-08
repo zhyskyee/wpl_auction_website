@@ -17,9 +17,11 @@
         <!-- log4j日志文件管理包版本 -->
         <slf4j.version>1.6.6</slf4j.version>
         <log4j.version>1.2.12</log4j.version>
-        <jackson.version>2.9.4</jackson.version>
+        <jackson.version>2.9.5</jackson.version>
         <!-- junit版本号 -->
         <junit.version>4.10</junit.version>
+        <java-memcached.version>3.0.2</java-memcached.version>
+        <commons-pool.version>1.6</commons-pool.version>
   </properties>
   
   <dependencies>
@@ -148,6 +150,22 @@
             <version>${slf4j.version}</version>
         </dependency>
         <!-- log end -->
+		
+		<!-- memcached start-->
+		<!-- https://mvnrepository.com/artifact/com.whalin/Memcached-Java-Client -->
+		<dependency>
+		    <groupId>com.whalin</groupId>
+		    <artifactId>Memcached-Java-Client</artifactId>
+		    <version>${java-memcached.version}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/commons-pool/commons-pool -->
+		<dependency>
+		    <groupId>commons-pool</groupId>
+		    <artifactId>commons-pool</artifactId>
+		    <version>${commons-pool.version}</version>
+		</dependency>
+		<!-- memcacheed end -->
 
         <!--spring单元测试依赖 -->
         <dependency>

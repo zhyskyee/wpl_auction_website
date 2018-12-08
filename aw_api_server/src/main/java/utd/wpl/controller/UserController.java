@@ -2,45 +2,25 @@ package utd.wpl.controller;
 
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import utd.wpl.pojo.Result;
 import utd.wpl.pojo.User;
 import utd.wpl.service.UserService;
-import com.mysql.jdbc.StringUtils;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-	class Result {
-		String answer;
-		public String getAnswer() {
-			return answer;
-		}
-		public void setAnswer(String answer) {
-			this.answer = answer;
-		}
-		public Result() {
-			// TODO Auto-generated constructor stub
-			super();
-		}
-	}
 	
 	@Autowired
 	private UserService userService;
@@ -56,9 +36,11 @@ public class UserController {
 	
 	
 	@PostMapping(value = "/login")
-	public ResponseEntity<Result> login(@RequestParam("username") String un, @RequestParam("password") String pswd) {
-		User findUser = userService.findUser(un);
-		String passwordMD5 = DigestUtils.md5DigestAsHex(pswd.getBytes());
+	public ResponseEntity<Result> login(RequestEntity<User> re) { //@RequestParam("username") String un, @RequestParam("password") String pswd
+		User tmp = re.getBody();
+		User findUser = userService.findUser(tmp.getUsername());
+		
+		String passwordMD5 = DigestUtils.md5DigestAsHex(tmp.getPassword().getBytes());
 		Result lResult = new Result();
 		if (findUser == null) {
 			lResult.setAnswer("User does not exist");
@@ -72,7 +54,6 @@ public class UserController {
 		userService.updateLastVisit(findUser);
 		lResult.setAnswer("Success");
 		return new ResponseEntity<>(lResult, HttpStatus.OK);
-		
 	}
 
 	// 用户注册

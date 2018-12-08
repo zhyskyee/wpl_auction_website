@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- mapper接口代理实现编写规则： 
+	1.映射文件中namespace要等于接口的全限定类名
+	2.映射文件中sql语句的id要等于接口方法名称 
+	3.映射文件中传入参数类型要等于接口方法的传入类型 
+	4.映射文件中返回结果类型要等于接口方法的返回值类型 -->
+<mapper namespace="utd.wpl.dao.ItemDao">
+	
+	<!-- ========sql语句======== -->
+	<!-- 查询某时间段内的数据 -->
+	<resultMap type="utd.wpl.pojo.Item" id="items">
+		<result column="itemid" property="itemid"/>
+		<result column="title" property="title"/>
+		<result column="ownerid" property="ownerid"/>
+		<result column="address" property="address"/>
+		<result column="description" property="description"/>
+		<result column="auction_date" property="auction_date"/>
+		<result column="price" property="price"/>
+		<result column="photo" property="photo"/>
+	</resultMap>
+	<select id="findAllItems" resultMap="items">
+		select * from item where auction_date between #{start_time} and #{end_time}
+	</select>
+	<select id="findCurItem" resultType="item">
+		select * from item where auction_date = #{start_time}
+	</select>
+	<!-- 添加某个item -->
+	<insert id="addItem" parameterType="item">
+		insert into item(title, ownerid, address, description, photo, auction_date, min_price, deal_price) 
+		values(#{item.title}, #{item.ownerid}, #{item.address}, #{item.description}, #{item.photo}, #{item.auction_date}, #{item.min_price}, #{item.deal_price})
+	</insert>
+	<!-- 3.更新最后访问时间 -->
+	<update id="updateItemOwner">
+		update item set ownerid = #{ownerid} where itemid = #{itemid}
+	</update>
+	<update id="updateItemDealPrice">
+		update item set deal_price = #{deal_price} where itemid = #{itemid}
+	</update>
+	<select id="findItemByItemId" resultType="item">
+		select * from item where itemid = #{itemid}
+	</select>
+	<delete id="deleteItemByItemId">
+		delete from item where itemid = #{itemid}
+	</delete>
+	<!-- 4.更新最后访问时间 -->
+	<!-- <insert id="updatePhoto" parameterType="user">
+		update user set photo = #{photo} where username = #{username}
+	</insert> -->
+	
+</mapper>

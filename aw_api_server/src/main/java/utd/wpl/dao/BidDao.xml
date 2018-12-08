@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- mapper接口代理实现编写规则： 
+	1.映射文件中namespace要等于接口的全限定类名
+	2.映射文件中sql语句的id要等于接口方法名称 
+	3.映射文件中传入参数类型要等于接口方法的传入类型 
+	4.映射文件中返回结果类型要等于接口方法的返回值类型 -->
+<mapper namespace="utd.wpl.dao.BidDao">
+	
+	<!-- ========sql语句======== -->
+	<resultMap type="utd.wpl.pojo.Bid" id="bids">
+		<result column="itemid" property="itemid"/>
+		<result column="ownerid" property="ownerid"/>
+		<result column="bidderid" property="bidder"/>
+		<result column="price" property="price"/>
+		<result column="timestamp" property="timestamp"/>
+	</resultMap>
+	<select id="getBidRecordsByIds" resultMap="bids">
+		select * from item 
+		<where>
+		    <if test="itemid != null">
+				itemid = #{itemid}
+			</if>
+			<if test="ownerid != null">
+				AND ownerid = #{ownerid}
+			</if>
+			<if test="bidderid != null">
+				AND bidderid = #{bidderid}
+			</if>
+	  </where>
+	</select>
+	
+	<insert id="addBidRecord">
+		insert into biditem(itemid, ownerid, bidderid, price, timestamp) 
+		values(#{bid.itemid}, #{bid.ownerid}, #{bid.bidderid}, #{bid.price}, #{bid.timestamp})
+	</insert>
+	
+</mapper>
