@@ -59,7 +59,7 @@
             <c:if test="${sessionScope.user == null}">
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Sign Up or Sign In</b> <span class="caret"></span></a>
-              <ul id="login-dp" class="dropdown-menu .mega-dropdown-menu">
+          <ul id="login-dp" class="dropdown-menu .mega-dropdown-menu">
                 <li>
                   <div class="row">
                     <div class="col-md-12">
@@ -69,7 +69,7 @@
                         <a href="#" class="btn btn-tw"><i class="fa fa-twitter"></i> Twitter</a>
                       </div>
                     or&nbsp;&nbsp;<div class="info-msg" style="display: inline-block;"><i id="alertholder" class="fa fa-info-circle">${message}</i></div>
-                      <form class="form" role="form" method="post" action="${pageContext.request.contextPath}/login" accept-charset="UTF-8" id="login-nav">
+                     
                         <div class="form-group">
                            <label class="sr-only" for="username">User Name</label>
                            <input type="text" name="username" value="${username}" class="form-control" id="username" placeholder="User Name" required>
@@ -87,7 +87,7 @@
                            <input type="checkbox"> keep me logged-in
                          </label>
                         </div>
-                     </form>
+                    
                     </div>
                     <div class="col-md-12 bottom text-center">
                       New here ? <a href="${pageContext.request.contextPath}/register"><b>Sign up</b></a>
@@ -121,7 +121,11 @@
         <a href="${pageContext.request.contextPath}/profile">
           <img src="images/thumbnails.png" alt="home page picture" style="width: 100%; height: 100%">
           <div class="carousel-caption d-none d-md-block">
-            <h3>User profile</h3>
+            <div class="bid_page">
+            <h1>Bid Items</h1>
+            <p ></p>
+            
+            </div>
             <p>This is a personal profile for the first slide.</p>
           </div></a>
         </div>
@@ -141,6 +145,12 @@
               <div class="carousel-caption d-none d-md-block">
                 <h3>Sell page</h3>
                 <p>This is a description for the sell item.</p>
+                  <c:if test="${sessionScope.user != null}">
+                    <li class="nav-item">
+                      <font color="white">Welcome!&nbsp;</font><font color="blue">${sessionScope.user.username}</font>
+      <a class="nav-link" style="display: inline-block;" href="${pageContext.request.contextPath}/logout">&nbsp;Sign Out</a>
+    </li>
+  </c:if>
               </div>
             </a>
           </div>

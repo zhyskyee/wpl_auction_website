@@ -1,14 +1,11 @@
 $(document).ready(function(){
-		//---------------控制显示message的div--------------------
 		var meg = $("#alertholder");
-		// alert(message);
-		//说明message没有值，那么就隐藏。
 		if(meg.html()==""){
 			meg.hide();
 		}
-		
-		//------------------提交表单-----------------
-		$("#submitLogin").click(function(){
+	
+		$("#submitLogin").click(function(e){
+			e.preventDefault();
 			var username = $("#username").val();
 			var password = $("#password").val();
 			if(username.trim().length==0 || password.trim().length==0){
@@ -16,10 +13,23 @@ $(document).ready(function(){
 				meg.html("  Please complete your input.");
 				return false;
 			}
-			console.log(username+" : "+ password);
-			$("#loginForm").submit(); 
-			return true;
-			 
+			$.ajax({
+            url: "http://localhost:8080/user/login",
+            type: 'post',
+            dataType: 'text',
+            contentType :"application/json;charset=utf-8",
+            data:JSON.stringify({
+                'username': username,
+                'password': password
+            }),
+            success: function(data) {
+            		console.log(data);
+                
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.responseText , "---", textStatus , " ----", errorThrown);
+            }
+        });
 		});
 		
 		//监听回车键

@@ -26,13 +26,16 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import utd.wpl.pojo.Result;
 import utd.wpl.pojo.User;
 
 import com.github.kevinsawicki.http.HttpRequest;
@@ -41,30 +44,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 //import com.fasterxml.jackson.databind.util.JSONPObject;
 
-@Controller
+@RestController
+@RequestMapping("/user")
 public class UserController {
-		
-		class Result {
-		String answer;
-		public String getAnswer() {
-			return answer;
-		}
-		public void setAnswer(String answer) {
-			this.answer = answer;
-		}
-		public Result() {
-			// TODO Auto-generated constructor stub
-			super();
-		}
-	}
 
-
-	// 显示主页
-	@RequestMapping("/")
-	public String index() {
-		return "index";
-	}
-	
 	@GetMapping("/profile") 
 	public void showProfile(User user) {
 	
@@ -75,22 +58,6 @@ public class UserController {
 
 	}
 	
-	//for now
-	@GetMapping("/order") 
-	public String showOrder() {
-		return "order";
-	} 
-	//for now
-	@GetMapping("/sell") 
-	public String showSell() {
-		return "sell";
-	} 
-	// for now
-	@GetMapping("/contact") 
-	public String showContact() {
-		return "contact";
-	} 
-	
 	// 显示注册页面
 	@RequestMapping("/register")
 	public String showRegister() {
@@ -99,13 +66,15 @@ public class UserController {
 	
 	// 处理登录请求
 	@RequestMapping(value = "/login", method=RequestMethod.POST)
-	public void login(@RequestParam("username") String un, @RequestParam("password") String pswd) {
+	public ResponseEntity<Result> login(RequestEntity<User> entity) {
+		User tmp = entity.getBody();
+		System.out.println("Username:"+tmp.getUsername()+ "    Pswd:"+tmp.getPassword());
 		JSONObject object = new JSONObject();
-		object.put("username", un);
-		object.put("password", pswd);
+		object.put("username", tmp.getUsername());
+		object.put("password", tmp.getPassword());
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 
-		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+//		ResponseHandler<String> responseHandler = new BasicResponseHandler();
 		try {
 			// 第一步：创建HttpClient对象
 			httpClient = HttpClients.createDefault();
@@ -120,9 +89,24 @@ public class UserController {
 			httpPost.setEntity(requestEntity);
 
 			// 第四步：发送HttpPost请求，获取返回值
-			String reString = httpClient.execute(httpPost, responseHandler); // 调接口获取返回值时，必须用此方法
+//			HttpResponse hr = httpClient.execute(httpPost); // 调接口获取返回值时，必须用此方法
 			// 。。。。。。。。
-			System.out.println("Ressutl:" + reString);
+			HttpResponse hr = httpClient.execute(httpPost); // responseHandler调接口获取返回值时，必须用此方法
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			// Response Body
+			String responseBody = responseHandler.handleResponse(hr);
+			System.out.println("Ressutl:" + responseBody);
+			Gson gson = new Gson();
+			Result result;
+			try {
+				result = gson.fromJson(responseBody, Result.class);
+				System.out.println("REspones From B:"+ result.getAnswer());
+			} catch (JsonSyntaxException ex) {
+				// TODO: handle exception
+				ex.printStackTrace();
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -136,6 +120,10 @@ public class UserController {
 				e.printStackTrace();
 			}
 		}
+		
+		Result r = new Result();
+		r.setAnswer("Nothing be done!!!");
+		return new ResponseEntity<>(r,HttpStatus.BAD_REQUEST);
 	}
 	
 	
