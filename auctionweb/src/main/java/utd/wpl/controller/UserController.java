@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import utd.wpl.pojo.Result;
 import utd.wpl.pojo.User;
@@ -107,7 +108,7 @@ public class UserController {
 				// TODO: handle exception
 				ex.printStackTrace();
 				result.setAnswer("fail");
-				return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(result, HttpStatus.OK);
 			}
 			return new ResponseEntity<Result>(result, HttpStatus.OK);
 
@@ -123,7 +124,7 @@ public class UserController {
 				e.printStackTrace();
 			}
 		}
-		return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	@GetMapping("/profile")
@@ -269,14 +270,18 @@ public class UserController {
 
 		Result r = new Result();
 		r.setAnswer("Fail");
-		return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(r, HttpStatus.OK);
 	}
 
 	// 用户注册
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ResponseEntity<Result> register(RequestEntity<User> entity, @RequestParam("comfirmPass") String confirmPass) throws IOException {
+	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+	public ResponseEntity<Result> register(RequestEntity<User> entity, @RequestParam("confirmPass") String confirmPass, @RequestParam(value="photo", required = false) MultipartFile file) throws IOException {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		User user = entity.getBody();
+		if (file == null || file.isEmpty()) {
+			System.out.println("There is not such file!!!");
+		}
+		user.setPhoto(file.getBytes());
 		JSONObject object = new JSONObject();
 		object.put("username", user.getUsername());
 		object.put("password", user.getPassword());
@@ -329,7 +334,7 @@ public class UserController {
 		}
 		Result res = new Result();
 		res.setAnswer("Fail");
-		return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
 	// 用户注销
@@ -338,6 +343,6 @@ public class UserController {
 		if (request.getSession().getAttribute("user") != null) {
 			request.getSession().removeAttribute("user");
 		}
-		return "redirect:/";
+		return "redirect";
 	}
 }

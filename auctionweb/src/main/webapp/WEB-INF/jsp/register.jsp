@@ -95,7 +95,7 @@ pageEncoding="utf-8"%>
 		              </div>
 		              
 		              <button type="reset" class="btn btn-secondary">Reset</button>
-		              <button id="submitregister" type="submit" class="btn btn-primary">Register</button>
+		              <button id="submitregister" type="button" class="btn btn-primary">Register</button>
 		          </div>
 		      </form>
 		  </div>

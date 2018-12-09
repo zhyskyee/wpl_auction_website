@@ -40,4 +40,9 @@ public class mainController {
 		public String showRegister() {
 			return "register";
 		}
+		
+		@GetMapping("/forgetpassword")
+		public String showForgetPswd() {
+			return "forgetpassword";
+		} 
 }

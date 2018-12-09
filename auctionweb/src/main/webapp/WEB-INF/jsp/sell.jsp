@@ -17,7 +17,7 @@
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
- 
+  <script type="text/javascript" src="/js/post.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/js/gijgo.min.js" type="text/javascript"></script>
   <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     
@@ -70,8 +70,7 @@
     </nav>
   
     <div class="container">
-      <h2>Your items</h1>
-      <hr>
+      <h2>Post items</h1>
       <div class="row">
         <!-- left column -->
         <div class="col-md-3">
@@ -92,19 +91,19 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="col-3 control-label">description</label>
+              <label class="col-3 control-label">Description</label>
               <div class="col-8">
                 <input class="form-control" type="text"  id="description">
               </div>
             </div>
             <div class="form-group">
-              <label class="col-3 control-label">address</label>
+              <label class="col-3 control-label">Address</label>
               <div class="col-8">
                 <textarea class="form-control" rows="5" placeholder="address" id="address"></textarea>
               </div>
             </div>
             <div class="form-group">
-              <label class="col-4 control-label">Minimum bidding price(USD)</label>
+              <label class="col-4 control-label">Minimum Bidding Price(USD)</label>
               <div class="col-8">
                 <input class="form-control" type="number" min="0" id="minimumprice">
               </div>
@@ -116,18 +115,19 @@
               </div>
             </div>
              <div class="form-group">
-              <label class="col-3 control-label">Select an auction date</label>
+              <label class="col-12 control-label">Select an auction date</label>
               <div class="col-8">
-                 <!-- <div class="input-group date"> -->
                   <div class="inline-block">
-                      <input id="auctiondate" class="form-control" type="date" /><button id="search" >Search</button></div>
-                  <!-- </div> -->
+                      <input id="auctiondate" class="form-control" type="date" />
+                      <br>
+                      <button id="search" class="btn btn-info" style="float:right">Search</button></div>
+                      <br><br> 
                       <div class="col-lg-12" id="selecttime" style="display: block;">
                         <select id="myselector">
-                          <option id="0">8：00 - 8：20</option>
-                          <option id="1">8：20 - 8：40</option>
-                          <option id="2">8：40 - 9：00</option>
-                          <option id="3">9：20 - 9：40</option>
+                          <option id="0">8:00 - 8:20</option>
+                          <option id="1">8:20 - 8:40</option>
+                          <option id="2">8:40 - 9:00</option>
+                          <option id="3">9:20 - 9:40</option>
                           <option id="4">9:40 - 10:00</option>
                           <option id="5">10:00 - 10:20</option>
                           <option id="6">10:20 - 10:40</option>

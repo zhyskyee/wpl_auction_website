@@ -53,13 +53,17 @@ $(document).ready(function() {
 					meg.html("Invalid phone number!");
 					return false;
 				}
-
+//
+//				function addURLParam(url, name, value){
+//				    url += (url.indexOf("?") == -1 ? "?" : "&");
+//				    url += encodeURICompontent(name) + "=" + encodeURICompontent(value);
+//				    return url;
+//				}
 				function addURLParam(url, name, value){
-				    url += (url.indexOf("?") == -1 ? "?" : "&");
-				    url += encodeURICompontent(name) + "=" + encodeURICompontent(value);
-				    return url;
-				}
-                var tourl = addURLParam("http://localhost:8080/user/register", "confirmPass=", confirmPass);
+			        url +=  "?" + name + "=" + value;
+			        return url;
+			    }
+                var tourl = addURLParam("http://localhost:8080/user/register", "confirmPass", confirmPass);
                 console.log("reg:::", tourl)
 				$.ajax({
 					url : tourl,

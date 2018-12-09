@@ -103,36 +103,29 @@
             </li>
     <li class="nav-item" id="signout" style="display:none;">
       <font color="white">Welcome!</font><font color="blue" id="showusername"></font>
-      <a class="nav-link" style="display: inline-block;" id="signoutbutton" href="${pageContext.request.contextPath}/logout">&nbsp;Sign Out</a>
+      <a class="nav-link" style="display: inline-block;" id="signoutbutton" href="${pageContext.request.contextPath}/user/logout">&nbsp;Sign Out</a>
     </li>
 </ul>
 </div>
 
 </nav>
-
-  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner" role="listbox">
-      <!-- Slide One - Set the background image for this slide in the line below -->
-      <div class="carousel-item active" style="" href="#">
-        <a href="${pageContext.request.contextPath}/profile">
-            <div class="bid_page">
+            <div class="bid_page" style="margin-top:150px;">
              <div class="container">
               <div class="row">
-                <div class="col-lg-12" style="text-align: center;">Bid Item For Now</div>
-                <div class="col-lg-6">Name:<span id="itemname"></span></div>
-                <div class="col-lg-6">Bid Price:<span id="bidprice"></span></div>
-                <div class="col-lg-6">Description:<span id="itemdescription"></span></div>
+                <div class="col-lg-12" style="text-align: center;"><h1>Bid Item For Now</h1></div>
+                <div class="col-lg-12"><p>Name:<span id="itemname"></span></p></div>
+                <div class="col-lg-12"><p>Bid Price:<span id="bidprice"></span></p></div>
+                <div class="col-lg-12"><p>Description:<span id="itemdescription"></span></p></div>
+                <div class="col-lg-12 col-sm-12">
+                    <div class="thumbnail">
+                       <img src="">
+                    </div>
                 <br><br>
                 <p id="bidmessage"></p><p id="mybidprice"></p>
-                <div class="col-lg-12"><button type="button" class="btn btn-default" id="bidbutton">Bid!</button></div>
+                <div class="col-lg-12"><button type="button" class="btn btn-info" id="bidbutton">Bid!</button></div>
               </div>
              </div>
-            </div>
-       </a>
-        </div>
-        <!-- Slide Two - Set the background image for this slide in the line below -->
-        </div>
-      </div>
+           </div>
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </div>

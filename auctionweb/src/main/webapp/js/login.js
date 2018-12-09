@@ -78,29 +78,29 @@ $(document).ready(function() {
 					}
 				});
 
-				$("#signoutbutton").click(function(e) {
-					               e.preventDefault();
-					               $.ajax({
-											url : "http://localhost:8080/user/logout",
-											type : 'post',
-											dataType : 'text',
-											contentType : "application/json;charset=utf-8",
-											data : JSON.stringify({
-											}),
-											success : function(data) {
-												console.log(data);
-												var datajson = JSON.parse(data);
-												if (datajson.answer == "Success") {
-													localStorage.setItem("state",0);
-													localStorage.deleteItem("username");
-												}
-											},
-											error : function(err) {
-												alert("Error loading JS File"
-														+ err);
-											}
-									      });
-				});
+//				$("#signoutbutton").click(function(e) {
+//					               e.preventDefault();
+//					               $.ajax({
+//											url : "http://localhost:8080/user/logout",
+//											type : 'post',
+//											dataType : 'text',
+//											contentType : "application/json;charset=utf-8",
+//											data : JSON.stringify({
+//											}),
+//											success : function(data) {
+//												console.log(data);
+//												var datajson = JSON.parse(data);
+//												if (datajson.answer == "Success") {
+//													localStorage.setItem("state",0);
+//													localStorage.deleteItem("username");
+//												}
+//											},
+//											error : function(err) {
+//												alert("Error loading JS File"
+//														+ err);
+//											}
+//									      });
+//				});
 
 				$("#bidbutton").click(function(e) {
 									e.preventDefault();
