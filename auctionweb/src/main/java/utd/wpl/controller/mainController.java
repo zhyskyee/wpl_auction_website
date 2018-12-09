@@ -34,4 +34,10 @@ public class mainController {
 		public String showContact() {
 			return "contact";
 		} 
+		
+		// 显示注册页面
+		@GetMapping("/register")
+		public String showRegister() {
+			return "register";
+		}
 }
