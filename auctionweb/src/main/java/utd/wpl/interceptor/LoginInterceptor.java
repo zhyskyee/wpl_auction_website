@@ -12,18 +12,17 @@ public class LoginInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		//如果是访问主页或者是登录操作，或者注册操作，放行
-//		String uri = request.getRequestURI();
-//		if (uri.equals("/") || uri.equals("/login") || uri.equals("/login/do")
-//				|| uri.equals("/register") || uri.equals("/register/do")) {
-//			return true;
-//		}
-//		// 判断session中是否有登录信息，如果没有则跳转到登录页面
-//		if (request.getSession().getAttribute("user") != null) {
-//			return true;
-//		}
-//		response.sendRedirect("/login");
-//		return false;
-		return true;
+		String uri = request.getRequestURI();
+		if (uri.equals("/") || uri.contains("/login") || uri.contains("/register")) {
+			return true;
+		}
+		// 判断session中是否有登录信息，如果没有则跳转到登录页面
+		if (request.getSession().getAttribute("user") != null) {
+			return true;
+		}
+		response.sendRedirect("/");
+		return false;
+//		return true;
 	}
 	
 	//执行时机：controller方法已经执行，ModelAndView没有返回
