@@ -19,7 +19,7 @@ import utd.wpl.service.BidService;
 * 
 ***********************************************/
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/spring/applicationContext-activemq.xml")
+@ContextConfiguration("/spring/application-activemq.xml")
 public class test {
 	@Autowired
 	private BidService bidService;

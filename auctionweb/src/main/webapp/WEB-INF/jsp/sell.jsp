@@ -2,8 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
 
   <meta charset="utf-8">
@@ -44,7 +43,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="#">Auction website</a>
+        <a class="navbar-brand" href="#">Post Item</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -87,44 +86,78 @@
 
           <form class="form-horizontal" role="form">
             <div class="form-group">
-              <label class="col-3 control-label">House Title</label>
+              <label class="col-3 control-label">Item Title</label>
               <div class="col-8">
-                <input class="form-control" type="text" placeholder="Your house name...">
+                <input class="form-control" type="text" placeholder="Your item name..." id="title">
               </div>
             </div>
             <div class="form-group">
-              <label class="col-3 control-label">Picture</label>
+              <label class="col-3 control-label">description</label>
               <div class="col-8">
-                <input class="form-control" type="file">
+                <input class="form-control" type="text"  id="description">
               </div>
             </div>
             <div class="form-group">
-              <label class="col-3 control-label">Description</label>
+              <label class="col-3 control-label">address</label>
               <div class="col-8">
-                <textarea class="form-control" rows="5" placeholder="Write down the detail of your house..."></textarea>
+                <textarea class="form-control" rows="5" placeholder="address" id="address"></textarea>
               </div>
             </div>
             <div class="form-group">
-              <label class="col-4 control-label">Initial bidding price(USD)</label>
+              <label class="col-4 control-label">Minimum bidding price(USD)</label>
               <div class="col-8">
-                <input class="form-control" type="number" min="0">
+                <input class="form-control" type="number" min="0" id="minimumprice">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-4 control-label">Picture</label>
+              <div class="col-8">
+                <input id="picture" type="file" accept="image/png,image/gif" name="file" />
               </div>
             </div>
              <div class="form-group">
               <label class="col-3 control-label">Select an auction date</label>
               <div class="col-8">
                  <!-- <div class="input-group date"> -->
-                      <input id="auctiondatetimepicker" class="form-control" type="text" />
+                  <div class="inline-block">
+                      <input id="auctiondate" class="form-control" type="date" /><button id="search" >Search</button></div>
                   <!-- </div> -->
-                  <script>
-                    $('#auctiondatetimepicker').datetimepicker({ footer: true, modal: true });
-                  </script>
+                      <div class="col-lg-12" id="selecttime" style="display: block;">
+                        <select id="myselector">
+                          <option id="0">8：00 - 8：20</option>
+                          <option id="1">8：20 - 8：40</option>
+                          <option id="2">8：40 - 9：00</option>
+                          <option id="3">9：20 - 9：40</option>
+                          <option id="4"></option>
+                          <option id="5"></option>
+                          <option id="6"></option>
+                          <option id="7"></option>
+                          <option id="8"></option>
+                          <option id="9"></option>
+                          <option id="10"></option>
+                          <option id="11"></option>
+                          <option id="12"></option>
+                          <option id="13"></option>
+                          <option id="14"></option>
+                          <option id="15"></option>
+                          <option id="16"></option>
+                          <option id="17"></option>
+                          <option id="18"></option>
+                          <option id="19"></option>
+                          <option id="20"></option>
+                          <option id="21"></option>
+                          <option id="22"></option>
+                          <option id="23"></option>
+                        </select>
+
+
+                      </div>
               </div>
             </div>
             <div class="form-group">
               <label class="col-3 control-label"></label>
               <div class="col-8">
-                <input type="button" class="btn btn-primary" value="Submit">
+                <input type="button" id="submitbutton" class="btn btn-primary" value="Submit">
                 <span></span>
                 <input type="reset" class="btn btn-danger" value="Clear">
               </div>
