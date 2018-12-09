@@ -45,6 +45,8 @@
                     <property name="suffix" value=".jsp"></property>
                     <property name="order" value="2"></property>
                 </bean>
+                <!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">       
+				</bean> -->
 	        </list>
 	    </property>
 	    <property name="defaultViews">

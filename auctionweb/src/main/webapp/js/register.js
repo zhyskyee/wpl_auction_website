@@ -1,5 +1,4 @@
-$(function() {
-	// ---------------控制显示message的div--------------------
+$(document).ready(function() {
 	var meg = $("#td-meg-div");
 	// 说明message没有值，那么就隐藏。
 	if (meg.html() == "") {
@@ -13,9 +12,10 @@ $(function() {
 		var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
 		return re.test(String(phone).toLowerCase());
 	}
-	//------------------提交表单-----------------
-	$("#submitRegister").click(
-			function() {
+
+	$("#submitregister").click(
+			function(e) {
+				e.preventDefault();
 				var username = $("#username").val();
 				var password = $("#password").val();
 				var confirmPass = $("#confirmPass").val();
@@ -53,9 +53,39 @@ $(function() {
 					meg.html("Invalid phone number!");
 					return false;
 				}
-				
-				$("#registerForm").submit();
-				return true;
+
+				function addURLParam(url, name, value){
+				    url += (url.indexOf("?") == -1 ? "?" : "&");
+				    url += encodeURICompontent(name) + "=" + encodeURICompontent(value);
+				    return url;
+				}
+                var tourl = addURLParam("http://localhost:8080/user/register", "confirmPass=", confirmPass);
+                console.log("reg:::", tourl)
+				$.ajax({
+					url : tourl,
+					type : 'post',
+					dataType : 'text',
+					contentType : "application/json;charset=utf-8",
+					data : JSON.stringify({
+						'username' : username,
+						'password' : password,
+						'email':email,
+						'phone':phone
+					}),
+					success : function(data) {
+						console.log(data);
+						var datajson = JSON.parse(data);
+						if (datajson.answer == "Success") {
+						alert("successful");
+                        window.location.href="http://localhost:8080"; 
+						}
+					},
+					error : function(err) {
+						alert("Error loading JS File"
+								+ err);
+					}
+				});
+
 			});
 	
 	//监听回车键

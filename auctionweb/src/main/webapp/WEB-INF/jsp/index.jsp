@@ -27,7 +27,6 @@
   <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-      <div class="container">
         <a class="navbar-brand" href="#">BID! BID! BID!</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -54,16 +53,18 @@
             <li class="nav-item" id="sell" style="display:none;">
               <a class="nav-link" href="${pageContext.request.contextPath}/sell">Sell</a>
             </li>
-
-           <%--  </c:if> --%>
             <li class="nav-item">
               <a class="nav-link" href="${pageContext.request.contextPath}/contact">Contact</a>
+            </li>
+            <li class="nav-item">
+              <p id="usernamshow"></p>
             </li>
           </ul>
           <ul class="navbar-nav ml-auto">
             <%-- <c:if test="${sessionScope.user == null}"> --%>
             <li class="dropdown" id="signinform">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Sign Up or Sign In</b> <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Sign Up or Sign In</b> 
+                <span class="caret"></span></a>
           <ul id="login-dp" class="dropdown-menu .mega-dropdown-menu">
                 <li>
                   <div class="row">
@@ -73,8 +74,8 @@
                         <a href="#" class="btn btn-fb"><i class="fa fa-facebook"></i> Facebook</a>
                         <a href="#" class="btn btn-tw"><i class="fa fa-twitter"></i> Twitter</a>
                       </div>
-                    or&nbsp;&nbsp;<div class="info-msg" style="display: inline-block;"><i id="alertholder" class="fa fa-info-circle">${message}</i></div>
-                     
+                    or&nbsp;&nbsp;<div class="info-msg" style="display: inline-block;">
+                      <i id="alertholder" class="fa fa-info-circle">${message}</i></div>
                         <div class="form-group">
                            <label class="sr-only" for="username">User Name</label>
                            <input type="text" name="username" value="${username}" class="form-control" id="username" placeholder="User Name" required>
@@ -82,7 +83,7 @@
                         <div class="form-group">
                           <label class="sr-only" for="password">Password</label>
                           <input type="password" name="password" value="${password}" class="form-control" id="password" placeholder="Password" required>
-                          <div class="help-block text-right"><a href="">Forget the password ?</a></div>
+                          <div class="help-block text-right"><a href="${pageContext.request.contextPath}/forgetpassword" id="forgetpassword">Forget the password ?</a></div>
                         </div>
                         <div class="form-group">
                          <button id="submitLogin" type="submit" class="btn btn-primary btn-block">Sign in</button>
@@ -92,40 +93,28 @@
                            <input type="checkbox"> keep me logged-in
                          </label>
                         </div>
-                    
                     </div>
                     <div class="col-md-6 bottom text-center">
                       <a href="${pageContext.request.contextPath}/register"><b>Sign up</b></a>
                     </div>
-                    <div class="col-md-6 bottom text-center">
-                    <a href="${pageContext.request.contextPath}/register" id="forgetpassword"><b>forget password</b></a>
-                    </div>
-                    
-
                   </div>
                 </li>
               </ul>
             </li>
-           <%--  </c:if> --%>
-   <%--  <c:if test="${sessionScope.user != null}"> --%>
-    <li class="nav-item" id="signout">
-      <font color="white">Welcome!&nbsp;</font><font color="blue" id="showusername">${sessionScope.user.username}</font>
+    <li class="nav-item" id="signout" style="display:none;">
+      <font color="white">Welcome!</font><font color="blue" id="showusername"></font>
       <a class="nav-link" style="display: inline-block;" id="signoutbutton" href="${pageContext.request.contextPath}/logout">&nbsp;Sign Out</a>
     </li>
-  <%-- </c:if> --%>
 </ul>
 </div>
-</div>
+
 </nav>
 
-<header>
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner" role="listbox">
       <!-- Slide One - Set the background image for this slide in the line below -->
       <div class="carousel-item active" style="" href="#">
         <a href="${pageContext.request.contextPath}/profile">
-          <img src="images/thumbnails.png" alt="home page picture" style="width: 100%; height: 100%">
-          <div class="carousel-caption d-none d-md-block">
             <div class="bid_page">
              <div class="container">
               <div class="row">
@@ -136,19 +125,14 @@
                 <br><br>
                 <p id="bidmessage"></p><p id="mybidprice"></p>
                 <div class="col-lg-12"><button type="button" class="btn btn-default" id="bidbutton">Bid!</button></div>
-             
-
               </div>
              </div>
             </div>
-            <p>This is a personal profile for the first slide.</p>
-          </div></a>
+       </a>
         </div>
         <!-- Slide Two - Set the background image for this slide in the line below -->
-
         </div>
       </div>
-    </header>
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </div>

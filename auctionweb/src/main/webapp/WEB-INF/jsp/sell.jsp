@@ -11,7 +11,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Seller page</title>
+  <title>Post page</title>
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap core JavaScript -->
@@ -128,26 +128,26 @@
                           <option id="1">8：20 - 8：40</option>
                           <option id="2">8：40 - 9：00</option>
                           <option id="3">9：20 - 9：40</option>
-                          <option id="4"></option>
-                          <option id="5"></option>
-                          <option id="6"></option>
-                          <option id="7"></option>
-                          <option id="8"></option>
-                          <option id="9"></option>
-                          <option id="10"></option>
-                          <option id="11"></option>
-                          <option id="12"></option>
-                          <option id="13"></option>
-                          <option id="14"></option>
-                          <option id="15"></option>
-                          <option id="16"></option>
-                          <option id="17"></option>
-                          <option id="18"></option>
-                          <option id="19"></option>
-                          <option id="20"></option>
-                          <option id="21"></option>
-                          <option id="22"></option>
-                          <option id="23"></option>
+                          <option id="4">9:40 - 10:00</option>
+                          <option id="5">10:00 - 10:20</option>
+                          <option id="6">10:20 - 10:40</option>
+                          <option id="7">10:40 - 11:00</option>
+                          <option id="8">11:00 - 11:20</option>
+                          <option id="9">11:20 - 11:40</option>
+                          <option id="10">11:40- 12:00</option>
+                          <option id="11">12:00 - 12:20</option>
+                          <option id="12">12:20 - 12:40</option>
+                          <option id="13">12:40 - 13:00</option>
+                          <option id="14">13:00 - 13:20</option>
+                          <option id="15">13:20 - 13:40</option>
+                          <option id="16">13:40 - 14:00</option>
+                          <option id="17">14:00 - 14:20</option>
+                          <option id="18">14:20 - 14:40</option>
+                          <option id="19">14:40 - 15:00</option>
+                          <option id="20">15:00 - 15:20</option>
+                          <option id="21">15:20 - 15:40</option>
+                          <option id="22">15:40 - 16:00</option>
+                          <option id="23">16:00 - 16:20</option>
                         </select>
 
 

@@ -1,13 +1,30 @@
-$(function() {
+$(document).ready(function() {
 
 	$("#resetbutton").click(
-			function() {
-				var username = $("#username").val();
-				var resetpassword = $("#resetpassword").val();
-				var phone = $("#phone").val();
-				
-				$("#forgetpasswordForm").submit();
-				return true;
+			var username = $("#username").val();
+			var password = $("#password").val();
+
+			$.ajax({
+				url : "http://localhost:8080/user/forgetpassword",
+				type : 'post',
+				dataType : 'text',
+				contentType : "application/json;charset=utf-8",
+				data : JSON.stringify({
+					'username' : username,
+					'password' : password
+				}),
+				success : function(data) {
+					console.log(data);
+					var datajson = JSON.parse(data);
+					if (datajson.answer == "Success") {
+					alert("successful");
+                    window.location.href="http://localhost:8080"; 
+					}
+				},
+				error : function(err) {
+					alert("Error loading JS File"
+							+ err);
+				}
 			});
 	
 	//监听回车键

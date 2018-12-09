@@ -25,7 +25,7 @@ pageEncoding="utf-8"%>
 	<div class="container-fluid">
 		<div class="row justify-content-center">
 			<div class="mx-auto col-md-5">
-				<form id="registerForm" method="post" class="form-horizontal" role="form" accept-charset="UTF-8" action="${pageContext.request.contextPath}/register/do">
+				<form  id="registerform">
 					
 					<h3>Sign Up</h3>
 					<h6>Please fill in this form to create an account.</h6>
@@ -48,24 +48,6 @@ pageEncoding="utf-8"%>
 								</div>
 							</div>
 						</div>
-
-		               <!--  <div class="form-group">
-		                  <div class="row">
-		                      <label for="first_name" class="col-lg-3 col-form-label">First Name:</label>
-		                      <div class="col-lg-9">
-		                          <input type="text" class="form-control" id="first_name" name="first_name">
-		                      </div>
-		                  </div>
-		                </div>
-
-		                <div class="form-group">
-		                  <div class="row">
-		                      <label for="last_name" class="col-lg-3 col-form-label">Last name:</label>
-		                      <div class="col-lg-9">
-		                          <input type="text" class="form-control" id="last_name" name="last_name">
-		                      </div>
-		                  </div>
-		              </div> -->
 
 		              <div class="form-group">
 		              	<div class="row">
@@ -113,7 +95,7 @@ pageEncoding="utf-8"%>
 		              </div>
 		              
 		              <button type="reset" class="btn btn-secondary">Reset</button>
-		              <button id="submitRegister" type="submit" class="btn btn-primary">Register</button>
+		              <button id="submitregister" type="submit" class="btn btn-primary">Register</button>
 		          </div>
 		      </form>
 		  </div>

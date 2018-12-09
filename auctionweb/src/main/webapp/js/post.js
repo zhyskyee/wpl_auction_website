@@ -1,18 +1,18 @@
 $(document).ready(function(){
 		$("#search").click(function(e){
-			e.preventDefault();
-		    var date = $(#auctiondate).val();
-			$.ajax({
-            url: "http://localhost:8080/item/searchtime",
-            type: 'post',
-            dataType: 'jsonp',
+			   e.preventDefault();
+		     var date = $(#auctiondate).val();
+			   $.ajax({
+            url: "http://localhost:8080/item/timeslots",
+            type: 'get',
+            dataType: 'text',
             contentType :"application/json;charset=utf-8",
             data:JSON.stringify({
                 'date': date
-            }),
+             }),
             success: function(data) {
-                  var datajson1 = JSON.stringify(data);
-                  var datajson = JSON.parse(datajson1);
+                  
+                  var datajson = JSON.parse(data);
                   var data2 = eval(datajson);
                   var myselect=document.getElementById("myselector");
                   var index=myselect.selectedIndex ;
@@ -46,7 +46,7 @@ $(document).ready(function(){
             var indextime=$("myselector").selectedIndex;
 
             $.ajax({
-            url: "http://localhost:8080/item/searchtime",
+            url: "http://localhost:8080/item/new",
             type: 'post',
             dataType: 'jsonp',
             contentType :"application/json;charset=utf-8",

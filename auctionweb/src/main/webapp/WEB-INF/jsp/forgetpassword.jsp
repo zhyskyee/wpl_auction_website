@@ -30,24 +30,20 @@
     <!-- Navigation -->
     <div class="container">
       <div class="row">
-        <form id="forgetpasswordForm" method="post" class="form-horizontal" role="form" accept-charset="UTF-8" action="${pageContext.request.contextPath}/use/forgetpassword">
-        <div class="col-lg-12" style=""><h1>Forget password</h1></div>
-        <div class="">
-         <div class="col-lg-12">
-           <label class="sr-only" for="username">User Name</label>
-                 <input type="text" name="username" id="username" value="${username}" class="form-control" placeholder="User Name" required>
-            </div>
-        <div class="col-lg-12">
-            <label class="sr-only" for="resetpassword">Password</label>
-                <input type="password" name="resetpassword" id="resetpasswords" value="${password}" class="form-control" placeholder="Password" required>
-        </div>
-        <div class="col-lg-12">
-            <label class="sr-only" for="password">Password</label>
-                <input type="text" name="phone" id="phone"  class="form-control" placeholder="Password" required>
-        </div>
-      </div>
-      <button class="btn btn-danger" id="resetbutton">Reset!</button>
-</form>
+        <form id="forgetpasswordForm">
+         <div class="col-lg-12" style=""><h1>Forget password</h1></div>
+           <div class="">
+              <div class="col-lg-12">
+                  <label class="sr-only" for="username">User Name</label>
+                   <input type="text" name="username" id="username" value="${username}" class="form-control" placeholder="User Name" required>
+              </div>
+              <div class="col-lg-12">
+                  <label class="sr-only" for="resetpassword">Password</label>
+                   <input type="password" name="resetpassword" id="resetpassword" value="${password}" class="form-control" placeholder="Password" required>
+              </div>
+         </div>
+         <button class="btn btn-danger" id="resetbutton">Reset!</button>
+      </form>
     </div>
 </body>
 </html>
