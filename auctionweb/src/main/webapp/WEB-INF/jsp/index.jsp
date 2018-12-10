@@ -39,7 +39,7 @@
               </a>
             </li>
               <li>
-              <a class="nav-link" href="${pageContext.request.contextPath}/futureorder">
+              <a class="nav-link" href="${pageContext.request.contextPath}/all">
                 Future Bid Items
               </a>
              </li>

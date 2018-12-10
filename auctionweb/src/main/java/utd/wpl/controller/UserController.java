@@ -32,6 +32,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import utd.wpl.Utils.ImageUtils;
 import utd.wpl.pojo.Result;
 import utd.wpl.pojo.User;
 
@@ -232,6 +234,9 @@ public class UserController {
 					User repUser = null;
 					try {
 						repUser = gson1.fromJson(responseBody1, User.class);
+						String file_path = "images/"+repUser.getUsername()+"_img"+".jpg";
+						ImageUtils.baseStrToImg(repUser.getPhoto(), file_path);
+						repUser.setPhoto(file_path.getBytes());
 						System.out.println(
 								"Response From B:" + repUser.getUsername() + " date:" + repUser.getLast_visit());
 						request.getSession().setAttribute("user", repUser);
@@ -274,20 +279,22 @@ public class UserController {
 	}
 
 	// 用户注册
-	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = {"multipart/form-data"})
-	public ResponseEntity<Result> register(RequestEntity<User> entity, @RequestParam("confirmPass") String confirmPass, @RequestParam(value="photo", required = false) MultipartFile file) throws IOException {
+//	@Bean(name = "multipartResolver")
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public ResponseEntity<Result> register(RequestEntity<User> entity, @RequestParam("confirmPass") String confirmPass) throws IOException {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		User user = entity.getBody();
-		if (file == null || file.isEmpty()) {
-			System.out.println("There is not such file!!!");
-		}
-		user.setPhoto(file.getBytes());
+//		if (file == null || file.isEmpty()) {
+//			System.out.println("There is not such file!!!");
+//		}
+//		user.setPhoto();
+		System.out.println("Leng====>"+user.getPhoto().length);
 		JSONObject object = new JSONObject();
 		object.put("username", user.getUsername());
 		object.put("password", user.getPassword());
 		object.put("email", user.getEmail());
 		object.put("phone", user.getPhone());
-//		object.put("photo", user.getPhoto());
+		object.put("photo", user.getPhoto());
 		try {
 			// 第一步：创建HttpClient对象
 			// httpClient = HttpClients.createDefault();

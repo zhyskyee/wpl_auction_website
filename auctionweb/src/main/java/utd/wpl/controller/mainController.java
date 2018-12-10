@@ -1,5 +1,6 @@
 package utd.wpl.controller;
 
+import org.springframework.cglib.core.ReflectUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,5 +45,10 @@ public class mainController {
 		@GetMapping("/forgetpassword")
 		public String showForgetPswd() {
 			return "forgetpassword";
+		} 
+		
+		@GetMapping("/all")
+		public String showAllItems() {
+			return "all";
 		} 
 }

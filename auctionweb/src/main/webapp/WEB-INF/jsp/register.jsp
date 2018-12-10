@@ -42,8 +42,8 @@ pageEncoding="utf-8"%>
 										<img class="profile-pic" src="images/thumbnails.png">
 									</div>
 									<div class="p-image">
-										<i class="fa fa-camera upload-button"></i>
-										<input class="file-upload" type="file" accept="image/*" name="photo" id="photo" />
+										<i id = "start" class="fa fa-camera upload-button"></i>
+										<input class="file-upload" type="file" accept="image/jpg" name="photo" id="photo" />
 									</div>
 								</div>
 							</div>

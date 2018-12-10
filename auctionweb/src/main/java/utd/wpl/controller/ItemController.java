@@ -301,6 +301,62 @@ public class ItemController {
 			}
 		}
 	}
+	
+	@RequestMapping(value = "/allpost", method = RequestMethod.GET)
+	public ResponseEntity<List<Item>> getAllPostItem(HttpServletRequest request) {
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		User user = (User)request.getSession().getAttribute("user");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			// 第二步：创建httpPost对象
+
+			URIBuilder builder = new URIBuilder("http://localhost:8989/item/allpost");
+			builder.addParameter("ownerid", String.valueOf(user.getUserid()));
+			builder.addParameter("time", sdf.format(new Date()));
+			System.out.println("Onere::::"+user.getUserid());
+			// 第二步：创建httpPost对象
+			HttpGet httpGet = new HttpGet(builder.build());
+			// 第三步：给httpPost设置JSON格式的参数
+			httpGet.setHeader("Content-type", "application/json");
+			// 第四步：发送HttpPost请求，获取返回值
+			HttpResponse hr = httpClient.execute(httpGet); // responseHandler调接口获取返回值时，必须用此方法
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			// Response Body
+			String responseBody = responseHandler.handleResponse(hr);
+			System.out.println("A ser postItems:"+responseBody);
+
+			if (responseBody != null && !responseBody.equals("")) {
+//				Gson gson = new Gson();
+				Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
+				List<Item> list = null;
+				try {
+					Type listType = new TypeToken<ArrayList<Item>>(){}.getType();
+					list = gson.fromJson(responseBody, listType);
+//					list = gson.fromJson(responseBody, List.class);
+				} catch (JsonSyntaxException ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
+					return new ResponseEntity<>(HttpStatus.OK);
+				}
+				return new ResponseEntity<List<Item>>(list, HttpStatus.OK);
+			}
+			// int statusCode = hr.getStatusLine().getStatusCode();
+			// System.out.println("statusCode:::" + statusCode+" resp:"+responseBody);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		finally {
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
+		
+	}
 
 	// 請求ALLITEM
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -456,13 +512,14 @@ public class ItemController {
 			String responseBody = responseHandler.handleResponse(hr);
 			if (responseBody != null && !responseBody.equals("")) {
 				Gson gson = new Gson();
-				Result result = null;
+				Result result = new Result();
+				result.setAnswer("fail");
 				try {
 					result = gson.fromJson(responseBody, Result.class);
 				} catch (JsonSyntaxException ex) {
 					// TODO: handle exception
 					ex.printStackTrace();
-					return new ResponseEntity<>(HttpStatus.OK);
+//					return new ResponseEntity<>(HttpStatus.OK);
 				}
 				return new ResponseEntity<Result>(result, HttpStatus.OK);
 			}

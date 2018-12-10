@@ -297,7 +297,7 @@ $(document)
 												// data : JSON.stringify({
 												// }),
 												success : function(data) {
-													console.log(data)
+													console.log(data);
 													if (data != null) {
 														var datajson = JSON
 																.parse(data);
