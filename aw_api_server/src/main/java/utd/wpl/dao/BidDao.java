@@ -13,6 +13,6 @@ import utd.wpl.pojo.Bid;
 * 
 ***********************************************/
 public interface BidDao {
-	void addBidRecord(@Param("bid") Bid bid);
+	int addBidRecord(@Param("bid") Bid bid);
 	List<Bid> getBidRecordsByIds(@Param("itemid") Integer itemid, @Param("ownerid") Integer ownerid, @Param("bidderid") Integer bidderid);
 }

@@ -30,4 +30,8 @@
 		update user set photo = #{photo} where username = #{username}
 	</insert>
 	
+	<update id="updatePassword">
+		update user set password = #{pswd} where username = #{username}
+	</update>
+	
 </mapper>

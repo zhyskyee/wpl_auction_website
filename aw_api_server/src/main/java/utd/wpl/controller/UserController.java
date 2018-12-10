@@ -1,5 +1,6 @@
 package utd.wpl.controller;
 
+import java.io.IOException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import utd.wpl.pojo.Result;
 import utd.wpl.pojo.User;
@@ -24,12 +26,33 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@PostMapping("/resetpswd")
+	public ResponseEntity<Result> resetPassword(RequestEntity<User> entity) {
+		User user = entity.getBody();
+		Result result = new Result();
+		result.setAnswer("fail");
+		
+		if (user.getPassword() != null && user.getPassword() != null) {
+			User findUser = userService.findUser(user.getUsername());
+			String passwordMD5 = DigestUtils.md5DigestAsHex(user.getPassword().getBytes());
+			if (findUser != null) {
+				if (userService.updatePassword(findUser.getUsername(), passwordMD5) == 1) {
+					result.setAnswer("Success");
+				} else {
+					result.setAnswer("Fail");
+				}
+			}
+		}
+		return new ResponseEntity<Result>(result, HttpStatus.OK);
+	}
+	
 	// 处理登录请求
 	@GetMapping(value = "/{username}")
 	public ResponseEntity<User> userProfile(@PathVariable("username") String un) {
 		User findUser = userService.findUser(un);
 		if (findUser == null) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		return new ResponseEntity<>(findUser, HttpStatus.OK);
 	}
@@ -41,43 +64,47 @@ public class UserController {
 		User findUser = userService.findUser(tmp.getUsername());
 		
 		String passwordMD5 = DigestUtils.md5DigestAsHex(tmp.getPassword().getBytes());
-		Result lResult = new Result();
+		Result result = new Result();
 		if (findUser == null) {
-			lResult.setAnswer("User does not exist");
-			return new ResponseEntity<>(lResult, HttpStatus.NOT_FOUND);
+			result.setAnswer("User does not exist");
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		if (!passwordMD5.equals(findUser.getPassword())) {
-			lResult.setAnswer("Password is incorrect");
-			return new ResponseEntity<>(lResult, HttpStatus.NO_CONTENT);
+			result.setAnswer("Password is incorrect");
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		findUser.setLast_visit(new Date());
-		userService.updateLastVisit(findUser);
-		lResult.setAnswer("Success");
-		return new ResponseEntity<>(lResult, HttpStatus.OK);
+		if (userService.updateLastVisit(findUser) == 1) {
+			result.setAnswer("Success");
+		} else {
+			result.setAnswer("Fail");
+		}
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	// 用户注册
 	@PostMapping(value = "/register")
-	public ResponseEntity<Result> register(RequestEntity<User> requestEntity, @RequestParam("confirmPass") String cfn) {
+	public ResponseEntity<Result> register(RequestEntity<User> requestEntity, @RequestParam("confirmPass") String cfn) throws IOException{
 		// 查询用户是否存在
 		User user = requestEntity.getBody();
 		User findUser = userService.findUser(user.getUsername());
 		Result result = new Result();
 		if (findUser != null) {
 			result.setAnswer("User already exists");
-			return new ResponseEntity<>(result, HttpStatus.FOUND);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		if (!cfn.equals(user.getPassword())) {
 			result.setAnswer("Password does not match");
-			return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
-		//补全pojo属性
 		user.setLast_visit(new Date());
-		//密码使用MD5加密
 		user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
-		//添加新用户
-		userService.addUser(user);
-		result.setAnswer("Success");
+		if (userService.addUser(user) == 1) {
+			result.setAnswer("Success");
+		} else {
+			result.setAnswer("Fail");
+		}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

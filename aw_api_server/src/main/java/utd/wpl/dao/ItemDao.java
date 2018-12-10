@@ -13,11 +13,12 @@ import org.apache.ibatis.annotations.Param;
 import utd.wpl.pojo.Item;
 
 public interface ItemDao {
-	void updateItemOwner(@Param("itemid") int itemid, @Param("ownerid") int newOwnerId);
-	void updateItemDealPrice(@Param("itemid") int itemid, @Param("deal_price") double deal_price);
+	int updateItemOwner(@Param("itemid") int itemid, @Param("ownerid") int newOwnerId);
+	int updateItemDealPrice(@Param("itemid") int itemid, @Param("deal_price") double deal_price);
 	List<Item> findAllItems(@Param("start_time") Date start_time, @Param("end_time") Date end_time);
 	Item findCurItem(@Param("start_time") Date cur_time);
-	void addItem(@Param("item") Item item);
+	int addItem(@Param("item") Item item);
+	Item findItemByItemAddress(@Param("address") String address);
 	Item findItemByItemId(@Param("itemid") int itemid);
-	void deleteItemByItemId(@Param("itemid") int itemid);
+	int deleteItemByItemId(@Param("itemid") int itemid);
 }

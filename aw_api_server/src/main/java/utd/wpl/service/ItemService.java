@@ -1,8 +1,13 @@
 package utd.wpl.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +18,7 @@ import utd.wpl.dao.BidDao;
 import utd.wpl.dao.ItemDao;
 import utd.wpl.pojo.Bid;
 import utd.wpl.pojo.Item;
+import utd.wpl.pojo.Result;
 
 /***********************************************
 * @author hxz174130@utdallas.edu
@@ -33,22 +39,52 @@ public class ItemService {
 	
 //	private final static String memCurItem = "curItem";
 	private final static String memPrefix = "itemid";
-	public void updateItemDealPrice(int itemid, double deal_price) {
+	private final static int auction_gap = 20; // 20 min
+	public int updateItemDealPrice(int itemid, double deal_price) {
 		Item item = this.findItemByItemId(itemid);
 		item.setDeal_Price(deal_price);
 		memCachedClient.set(memPrefix+itemid, item);
-		itemDao.updateItemDealPrice(itemid, deal_price);
+		return itemDao.updateItemDealPrice(itemid, deal_price);
 	}
-	public void updateItemOwner(int itemid, int newOwnerId) {
+	public int updateItemOwner(int itemid, int newOwnerId) {
 		Item item = (Item) memCachedClient.get(memPrefix+itemid);
 		if (item != null) {
 			item.setOwnerid(newOwnerId);
 		}
-		itemDao.updateItemOwner(itemid, newOwnerId);
+		return itemDao.updateItemOwner(itemid, newOwnerId);
 	}
 	
 	public List<Item> findAllItems(Date start_time, Date end_time) {
 		return itemDao.findAllItems(start_time, end_time);
+	}
+	
+	public List<Result> getAvaTimeSlotsByDate(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.HOUR_OF_DAY, 17);
+		Date et = calendar.getTime();
+		calendar.set(Calendar.HOUR_OF_DAY, 8);
+		Date st = calendar.getTime();
+		List<Item> list = itemDao.findAllItems(st, et);
+		Set<Date> set = new HashSet<>();
+		for (Item item : list) {
+			set.add(item.getAuction_date());
+		}
+		Boolean[] re = new Boolean[24];
+		List<Result> listResult = new ArrayList<>();
+		Date tmp = new Date(st.getTime());
+		for (int i = 0; i < re.length; i++) {
+			Result tmp1 = new Result();
+			if (set.contains(tmp)) {
+				tmp1.setAnswer("false");
+			} else {
+				tmp1.setAnswer("true");
+			}
+			listResult.add(tmp1);
+			calendar.add(Calendar.MINUTE, auction_gap);
+			tmp = calendar.getTime();
+		}
+		return listResult;
 	}
 	
 	public Item findCurItem(Date cur_time) {
@@ -56,7 +92,7 @@ public class ItemService {
 		calendar.setTime(cur_time);
 		calendar.set(Calendar.SECOND, 0);
 		int miniute = calendar.get(Calendar.MINUTE);
-		miniute -= miniute % 10; //10分钟
+		miniute -= miniute % auction_gap; //20分钟
 		calendar.set(Calendar.MINUTE, miniute);
 		Date conversion = calendar.getTime();
 		System.out.println("Request to retireve cur bid item:"+ conversion);
@@ -67,8 +103,8 @@ public class ItemService {
 		
 		return newItem;
 	}
-	public void addItem(Item item) {
-		itemDao.addItem(item);
+	public int addItem(Item item) {
+		return itemDao.addItem(item);
 	}
 	public Item findItemByItemId(int itemid) {
 		Item item = (Item) memCachedClient.get(memPrefix+itemid);
@@ -81,17 +117,19 @@ public class ItemService {
 		} 
 		return item;
 	}
-	public void deleteItemByItemId(int itemid) {
+	public int deleteItemByItemId(int itemid) {
 		Item delItem = (Item) memCachedClient.get(memPrefix+itemid);
 		if (delItem != null) {
 			memCachedClient.delete(memPrefix+itemid);
 		}
-		itemDao.deleteItemByItemId(itemid);
+		return itemDao.deleteItemByItemId(itemid);
 	}
-	
+	public Item findItemByItemAddress(String address) {
+		return itemDao.findItemByItemAddress(address);
+	}
 	//bid: operations;
-	public void addBidRecord(Bid bid) {
-		bidDao.addBidRecord(bid);
+	public int addBidRecord(Bid bid) {
+		return bidDao.addBidRecord(bid);
 	}
 	public List<Bid> getBidRecords(Integer itemid, Integer ownerid, Integer bidderid) {
 		return bidDao.getBidRecordsByIds(itemid, ownerid, bidderid);

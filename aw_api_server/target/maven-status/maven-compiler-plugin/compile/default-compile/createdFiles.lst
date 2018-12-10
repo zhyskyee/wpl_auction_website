@@ -1,0 +1,11 @@
+utd/wpl/pojo/Bid.class
+utd/wpl/pojo/Result.class
+utd/wpl/controller/ItemController.class
+utd/wpl/dao/ItemDao.class
+utd/wpl/pojo/Item.class
+utd/wpl/dao/BidDao.class
+utd/wpl/dao/UserDao.class
+utd/wpl/controller/UserController.class
+utd/wpl/pojo/User.class
+utd/wpl/service/ItemService.class
+utd/wpl/service/UserService.class

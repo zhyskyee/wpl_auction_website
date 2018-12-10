@@ -14,7 +14,7 @@ public class User implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -6031856798590779968L;
-	private int id;
+	private int userid;
 	private String username;
 	private String password;
 	private Date last_visit;
@@ -37,12 +37,7 @@ public class User implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+
 	public Date getLast_visit() {
 		return last_visit;
 	}
@@ -66,5 +61,11 @@ public class User implements Serializable {
 	}
 	public void setPhoto(byte[] photo) {
 		this.photo = photo;
+	}
+	public int getUserid() {
+		return userid;
+	}
+	public void setUserid(int userid) {
+		this.userid = userid;
 	}
 }

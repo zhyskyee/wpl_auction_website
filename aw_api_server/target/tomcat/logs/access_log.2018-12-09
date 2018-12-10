@@ -1,0 +1,5 @@
+127.0.0.1 - - [09/Dec/2018:19:33:40 -0600] "POST /user/login HTTP/1.1" 200 31 http-bio-8989-exec-1 824
+127.0.0.1 - - [09/Dec/2018:19:33:40 -0600] "GET /user/zhyskyee HTTP/1.1" 200 168 http-bio-8989-exec-2 23
+0:0:0:0:0:0:0:1 - - [09/Dec/2018:19:33:45 -0600] "GET /item/one?time=2018-12-09%2008:00:00 HTTP/1.1" 200 193 http-bio-8989-exec-5 324
+127.0.0.1 - - [09/Dec/2018:19:34:01 -0600] "GET /item/15 HTTP/1.1" 200 193 http-bio-8989-exec-7 4
+127.0.0.1 - - [09/Dec/2018:19:34:01 -0600] "POST /item/bid HTTP/1.1" 200 - http-bio-8989-exec-9 99

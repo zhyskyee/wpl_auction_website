@@ -16,7 +16,6 @@
 	http://www.springframework.org/schema/util 
 	http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 	
-	
 	<!-- 1.加载配置文件 -->
 	<context:property-placeholder location="classpath:resource/*.properties"/>
 	
@@ -30,13 +29,47 @@
 		p:maxActive="10"
 		p:minIdle="5"
 		/>
-	
+	<!-- Memcached配置 -->  
+    <!-- <bean id="memcachedPool" class="com.whalin.MemCached.SockIOPool"  
+        factory-method="getInstance" init-method="initialize" destroy-method="shutDown">  
+        <constructor-arg>
+			<value>memCachedPool</value>
+		</constructor-arg>
+        <property name="servers">
+            <list>  
+                <value>${memcached.server}</value>  
+            </list>  
+        </property>  
+        <property name="initConn">  
+            <value>${memcached.initConn}</value>  
+        </property>  
+        <property name="minConn">  
+            <value>${memcached.minConn}</value>  
+        </property>  
+        <property name="maxConn">  
+            <value>${memcached.maxConn}</value>  
+        </property>  
+        <property name="maintSleep">  
+            <value>${memcached.maintSleep}</value>  
+        </property>  
+        <property name="nagle">  
+            <value>${memcached.nagle}</value>  
+        </property>  
+        <property name="socketTO">  
+            <value>${memcached.socketTO}</value>  
+        </property>  
+    </bean>  
+    <bean id="memCachedClient" class="com.whalin.MemCached.MemCachedClient">
+		<constructor-arg>
+			<value>memCachedPool</value>
+		</constructor-arg>
+	</bean> -->
 	<!-- 3.配置SqlSessionFactory 使用mybatis和spring整合包中的-->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<!-- 指定数据源 -->
 		<property name="dataSource" ref="dataSource" />
 		<!-- 指定mybatis核心配置文件 -->
-		<property name="configLocation" value="classpath:mybatis/SqlMapConfig.xml" />
+		<property name="configLocation" value="classpath:mybatis/sqlMapConfig.xml" />
 	</bean>
 	
 	<!-- 4.Mapper映射文件的包扫描，用于生成接口的代理对象 -->

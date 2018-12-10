@@ -36,29 +36,55 @@ public class ItemController {
 	
 	@Autowired
 	private ItemService itemService;
-
-	@GetMapping(value = "/one")
-	public ResponseEntity<Item> getCurBidItem(@RequestParam("curtime") String curtime) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Item> getItemByID(@PathVariable("id") int itemid) {
+		Item item = itemService.findItemByItemId(itemid);
+		return new ResponseEntity<Item>(item, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping(value = "/timeslots")
+	public ResponseEntity<List<Result>> getAvailableTimeSlots(@RequestParam("date") String date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		System.out.println("B server===>"+date);
 		Date date_cutime;
 		try {
-			date_cutime = sdf.parse(curtime);
+			date_cutime = sdf.parse(date);
 			System.out.println(date_cutime); // prints 10-04-2018
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		List<Result> slots = itemService.getAvaTimeSlotsByDate(date_cutime);
+		if (slots == null)
+			return new ResponseEntity<>(HttpStatus.OK);
+		
+		return new ResponseEntity<List<Result>>(slots, HttpStatus.OK);
+	}
+	@GetMapping(value = "/one")
+	public ResponseEntity<Item> getCurBidItem(@RequestParam("time") String time) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date_cutime;
+		try {
+			date_cutime = sdf.parse(time);
+			System.out.println(date_cutime); // prints 10-04-2018
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		Item item = itemService.findCurItem(date_cutime);
 		if (item == null)
-			return new ResponseEntity<Item>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Item>(HttpStatus.OK);
 		
 		return new ResponseEntity<Item>(item, HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<Item>> getAllBidItem(@RequestParam("start_time") String st, @RequestParam("end_time") String et) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date_st, date_et;
 		try {
 			date_st = sdf.parse(st);
@@ -67,25 +93,59 @@ public class ItemController {
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		List<Item> list = itemService.findAllItems(date_st, date_et);
 		if (list == null) {
-			return new ResponseEntity<List<Item>>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<List<Item>>(HttpStatus.OK);
 		}
 		return new ResponseEntity<List<Item>>(list, HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/new")
-	public ResponseEntity<Result> postNewItem(RequestEntity<Item> entity) {
-		Item newItem = entity.getBody();
-		itemService.addItem(newItem);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<Result> postNewItem(@RequestBody Map<String, String> map) {
+		Item newItem = new Item();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		newItem.setTitle(map.get("title"));
+		System.out.println("-------->"+map.get("title"));
+		newItem.setAddress(map.get("address"));
+		System.out.println("-------->"+map.get("address"));
+		try {
+			newItem.setAuction_date(sdf.parse(map.get("auction_date")));
+			System.out.println("-------->"+map.get("auction_date"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		newItem.setDescription(map.get("description"));
+		System.out.println("-------->"+map.get("description"));
+		newItem.setMin_price(Double.parseDouble(map.get("min_price")));
+		System.out.println("-------->"+map.get("min_price"));
+		newItem.setOwnerid(Integer.parseInt(map.get("ownerid")));
+		System.out.println("-------->"+map.get("ownerid"));
+		
+		Item findItem = itemService.findItemByItemAddress(newItem.getAddress());
+		Result result = new Result();
+		if (findItem != null) {
+			result.setAnswer("Item already exists");
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
+		}
+		
+		if (itemService.addItem(newItem) == 0) {
+			result.setAnswer("Fails to addItem for unknown");
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
+		}
+		result.setAnswer("success");
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/{itemid}")
 	public ResponseEntity<Result> deleteItem(@PathVariable("itemid") int itemid) {
-		itemService.deleteItemByItemId(itemid);
+		Result result = new Result();
+		if (itemService.deleteItemByItemId(itemid) == 0) {
+			result.setAnswer("Fails to deleteItem for unknown");
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
+		}
 		return new ResponseEntity<Result>(HttpStatus.OK);
 	}
 	
@@ -93,7 +153,11 @@ public class ItemController {
 	public ResponseEntity<Result> updateOwner(@RequestBody Map map) {
 		String ownerId = map.get("ownerid").toString();
 		String itemId = map.get("itemid").toString();
-		itemService.updateItemOwner(Integer.parseInt(itemId), Integer.parseInt(ownerId));
+		Result result = new Result();
+		if (itemService.updateItemOwner(Integer.parseInt(itemId), Integer.parseInt(ownerId)) == 0) {
+			result.setAnswer("Fails to updateItemOwner for unknown");
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
+		}
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -106,13 +170,16 @@ public class ItemController {
 		Item item = itemService.findItemByItemId(itemid);
 		if (item == null) {
 			result.setAnswer("Item["+itemid+"] not in server");
-			return new ResponseEntity<Result>(result, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
 		}
 		if (bidprice <= item.getDeal_Price()) {
 			result.setAnswer("The bidding price is lower");
-			return new ResponseEntity<Result>(result, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
 		}
-		itemService.updateItemDealPrice(itemid, bidprice);
+		if (itemService.updateItemDealPrice(itemid, bidprice) == 0) {
+			result.setAnswer("Fails to updateItemDealPrice for unknown");
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
+		}
 		
 		return new ResponseEntity<Result>(result, HttpStatus.OK);
 	}
@@ -120,7 +187,12 @@ public class ItemController {
 	@PostMapping(value = "/bid")
 	public ResponseEntity<Result> addBidRecord(RequestEntity<Bid> entity) {
 		Bid bb = entity.getBody();
-		itemService.addBidRecord(bb);
+//		System.out.println("");
+		Result result = new Result();
+		if (itemService.addBidRecord(bb) == 0) {
+			result.setAnswer("Fails to addBidRecord for unknown");
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
+		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -132,5 +204,4 @@ public class ItemController {
 		List<Bid> list = itemService.getBidRecords(itemid, ownerid, bidderid);
 		return new ResponseEntity<List<Bid>>(list, HttpStatus.OK);
 	}
-	
 }

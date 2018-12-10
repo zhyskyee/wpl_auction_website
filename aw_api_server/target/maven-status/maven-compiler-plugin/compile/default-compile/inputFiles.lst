@@ -1,0 +1,11 @@
+/Users/zhy/eclipse-workspace/aw_api_server/src/main/java/utd/wpl/dao/BidDao.java
+/Users/zhy/eclipse-workspace/aw_api_server/src/main/java/utd/wpl/pojo/Bid.java
+/Users/zhy/eclipse-workspace/aw_api_server/src/main/java/utd/wpl/pojo/Item.java
+/Users/zhy/eclipse-workspace/aw_api_server/src/main/java/utd/wpl/dao/ItemDao.java
+/Users/zhy/eclipse-workspace/aw_api_server/src/main/java/utd/wpl/service/ItemService.java
+/Users/zhy/eclipse-workspace/aw_api_server/src/main/java/utd/wpl/pojo/User.java
+/Users/zhy/eclipse-workspace/aw_api_server/src/main/java/utd/wpl/controller/ItemController.java
+/Users/zhy/eclipse-workspace/aw_api_server/src/main/java/utd/wpl/pojo/Result.java
+/Users/zhy/eclipse-workspace/aw_api_server/src/main/java/utd/wpl/service/UserService.java
+/Users/zhy/eclipse-workspace/aw_api_server/src/main/java/utd/wpl/dao/UserDao.java
+/Users/zhy/eclipse-workspace/aw_api_server/src/main/java/utd/wpl/controller/UserController.java

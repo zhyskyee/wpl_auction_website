@@ -1,5 +1,7 @@
 package utd.wpl.service;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +17,20 @@ public class UserService {
 	private UserDao userDao;
 	@Autowired
 	private MemCachedClient memCachedClient;
+
 	
-//	public MemCachedClient getMemCachedClient() {
-//		return this.memCachedClient;
-//	}
-//	
-//	
-//	public void setMemCachedClient(MemCachedClient memCachedClient) {
-//		this.memCachedClient = memCachedClient;
-//	}
+	public int updatePassword(String username, String pswd) {
+		User cuUser;
+		if (userDao.updatePassword(username, pswd) == 1) {
+			if ((cuUser = (User) memCachedClient.get(username)) != null) {
+				cuUser.setPassword(pswd);
+				memCachedClient.set(username, cuUser);
+			}
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 	
 	/**
 	 * 查询用户信息
@@ -48,31 +55,41 @@ public class UserService {
 	 * 添加新用户
 	 * @param user
 	 */
-	public void addUser(User user) {
-		userDao.insertUser(user);
-		memCachedClient.set(user.getUsername(), user);
+	public int addUser(User user) {
+		if (userDao.insertUser(user) == 1) {
+			memCachedClient.set(user.getUsername(), user);
+			return 1;
+		}
+		return 0;
 	}
 	
 	/**
 	 * 更新用户最后访问时间
 	 * @param user
 	 */
-	public void updateLastVisit(User user) {
-		userDao.updateLastVisit(user);
-		if (memCachedClient.get(user.getUsername()) != null) {
-//			System.out.println("Modify the "+cUser.getUsername()+"'s last_visit directly: "+cUser.getLast_visit());
-			memCachedClient.set(user.getUsername(), user);
-			User tmp = (User)(memCachedClient.get(user.getUsername()));
-			System.out.println("Update current user's last_visited_date:"+ tmp.getLast_visit());
+	public int updateLastVisit(User user) {
+		if (userDao.updateLastVisit(user) == 1) {
+			if (memCachedClient.get(user.getUsername()) != null) {
+				memCachedClient.set(user.getUsername(), user);
+			}
+			return 1;
+		} else {
+			return 0;
 		}
-		
 	}
 	
 	/*
 	 * update user's Photo
 	 * */
-	public void updatePhoto(User user) {
-		userDao.updatePhoto(user);
+	public int updatePhoto(User user) {
+		if (userDao.updatePhoto(user) == 1) {
+			if (memCachedClient.get(user.getUsername()) != null) {
+				memCachedClient.set(user.getUsername(), user);
+			}
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 	
 }
