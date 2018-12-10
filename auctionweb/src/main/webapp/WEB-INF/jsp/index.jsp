@@ -26,7 +26,7 @@
 
   <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" style="padding-right:100px;">
         <a class="navbar-brand" href="#">BID! BID! BID!</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -39,8 +39,8 @@
               </a>
             </li>
               <li>
-              <a class="nav-link" href="${pageContext.request.contextPath}/todayorder">
-                Today's Items
+              <a class="nav-link" href="${pageContext.request.contextPath}/futureorder">
+                Future Bid Items
               </a>
              </li>
            <%--  <c:if test="${sessionScope.user != null}"> --%>
@@ -103,26 +103,44 @@
             </li>
     <li class="nav-item" id="signout" style="display:none;">
       <font color="white">Welcome!</font><font color="blue" id="showusername"></font>
-      <a class="nav-link" style="display: inline-block;" id="signoutbutton" href="${pageContext.request.contextPath}/user/logout">&nbsp;Sign Out</a>
+      <a class="nav-link" style="display: inline-block;" id="signoutbutton" href="${pageContext.request.contextPath}/logout">&nbsp;Sign Out</a>
     </li>
 </ul>
 </div>
 
 </nav>
+
             <div class="bid_page" style="margin-top:150px;">
              <div class="container">
+             
               <div class="row">
+              <div class="time">
+                 <p class="date">
+                  <strong id="Y"></strong>
+                  <strong id="MH"></strong>
+                  <strong id="TD"></strong>
+                  <strong id="D"></strong>
+                  <strong id="H"></strong>
+                  <strong id="M"></strong>
+                  <strong id="S"></strong>
+                 </p>  
+              </div>
                 <div class="col-lg-12" style="text-align: center;"><h1>Bid Item For Now</h1></div>
-                <div class="col-lg-12"><p>Name:<span id="itemname"></span></p></div>
-                <div class="col-lg-12"><p>Bid Price:<span id="bidprice"></span></p></div>
-                <div class="col-lg-12"><p>Description:<span id="itemdescription"></span></p></div>
+                <div class="col-lg-12"><p>Item ID:<span id="itemid"></span></p></div>
+                <div class="col-lg-12"><p>Name:<span id="title"></span></p></div>
+                <div class="col-lg-12"><p>Owner ID:<span id="ownerid"></span></p></div>
+                <div class="col-lg-12"><p>Description:<span id="description"></span></p></div>
+                <div class="col-lg-12"><p>Auction Date:<span id="auction_date"></span></p></div>
+                <div class="col-lg-12"><p>Bid Price:<span id="deal_price"></span></p></div>
+                <div class="col-lg-12"><p>Minimum Price:<span id="min_price"></span></p></div>
+                <p>Bid Your Price:</p><input class="form-control" type="number" min="0" id="price">
                 <div class="col-lg-12 col-sm-12">
                     <div class="thumbnail">
                        <img src="">
                     </div>
                 <br><br>
                 <p id="bidmessage"></p><p id="mybidprice"></p>
-                <div class="col-lg-12"><button type="button" class="btn btn-info" id="bidbutton">Bid!</button></div>
+                <div class="col-lg-12"><button type="button" class="btn btn-info" id="bidbutton" style="float:right;width:200px;text-align:center;">Bid!</button></div>
               </div>
              </div>
            </div>

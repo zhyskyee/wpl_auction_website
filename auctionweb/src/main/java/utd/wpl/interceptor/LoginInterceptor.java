@@ -13,7 +13,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 			throws Exception {
 		//如果是访问主页或者是登录操作，或者注册操作，放行
 		String uri = request.getRequestURI();
-		if (uri.equals("/") || uri.contains("/login") || uri.contains("/register")) {
+		if (uri.equals("/") || uri.contains("/login") || uri.contains("/register") || uri.contains("curitem")) {
 			return true;
 		}
 		// 判断session中是否有登录信息，如果没有则跳转到登录页面

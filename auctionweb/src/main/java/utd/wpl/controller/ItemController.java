@@ -23,6 +23,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
@@ -38,7 +39,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -170,8 +173,6 @@ public class ItemController {
 		
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		try {
-			// 第一步：创建HttpClient对象
-			httpClient = HttpClients.createDefault();
 			/*
 			 * 添加参数到URL的尾巴
 			 */
@@ -218,41 +219,44 @@ public class ItemController {
 	}
 	
 	@GetMapping("/curitem")
-	public ResponseEntity<Item> getCurItem() {
+	public String getCurItem(HttpServletRequest request) {
+//		System.out.println("-----====>"+map.get("date"));
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date = sdf.format(new Date());
+		System.out.println("===========>Aserver getcuritem"+date);
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		try {
-			// 第一步：创建HttpClient对象
-			httpClient = HttpClients.createDefault();
 			/*
 			 * 添加参数到URL的尾巴
 			 */
 			URIBuilder builder = new URIBuilder("http://localhost:8989/item/one");
 			builder.addParameter("time", date);
 			// 第二步：创建httpPost对象
-			HttpPost httpPost = new HttpPost(builder.build());
+			HttpGet httpGet = new HttpGet(builder.build());
 			// 第三步：给httpPost设置JSON格式的参数
 //			httpPost.setHeader("Content-type", "application/json");
 			// 第四步：发送HttpPost请求，获取返回值
-			HttpResponse hr = httpClient.execute(httpPost); // responseHandler调接口获取返回值时，必须用此方法
+			HttpResponse hr = httpClient.execute(httpGet); // responseHandler调接口获取返回值时，必须用此方法
 			ResponseHandler<String> responseHandler = new BasicResponseHandler();
 			// Response Body
+			
 			String responseBody = responseHandler.handleResponse(hr);
-			if (responseBody != null && !responseBody.equals("")) {
-				Gson gson = new Gson();
-				Item item;
-				try {
-					item = gson.fromJson(responseBody, Item.class);
-				} catch (JsonSyntaxException ex) {
-					// TODO: handle exception
-					ex.printStackTrace();
-					return new ResponseEntity<>(HttpStatus.OK);
-				}
-				return new ResponseEntity<Item>(item, HttpStatus.OK);
-			}
-			// int statusCode = hr.getStatusLine().getStatusCode();
-			// System.out.println("statusCode:::" + statusCode+" resp:"+responseBody);
+			System.out.println("A from B: responseBody:"+responseBody);
+			return responseBody;
+//			if (responseBody != null && !responseBody.equals("")) {
+////				Gson gson = new Gson();
+////				Item item;
+//				Item item = null;
+//				Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
+//				try {
+//					item = gson.fromJson(responseBody, Item.class);
+//				} catch (JsonSyntaxException ex) {
+//					// TODO: handle exception
+//					ex.printStackTrace();
+//					return new ResponseEntity<>(HttpStatus.OK);
+//				}
+//				return new ResponseEntity<Item>(item, HttpStatus.OK);
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -265,7 +269,8 @@ public class ItemController {
 				e.printStackTrace();
 			}
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+//		return new ResponseEntity<>(HttpStatus.OK);
+		return null;
 	} 
 	// 請求ONEITEM
 	@RequestMapping(value = "/one", method = RequestMethod.GET)
@@ -299,24 +304,41 @@ public class ItemController {
 
 	// 請求ALLITEM
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
-	public void getAllItem(@RequestParam("start_time") SimpleDateFormat startTime,
-			@RequestParam("end_time") SimpleDateFormat endTime) {
+	public ResponseEntity<List<Item>> getAllItem(@RequestParam("start_time") String startTime,
+			@RequestParam("end_time") String endTime) {
 
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-
-		ResponseHandler<String> responseHandler = new BasicResponseHandler();
 		try {
-			// 第一步：创建HttpClient对象
-			httpClient = HttpClients.createDefault();
 			// 第二步：创建httpPost对象
-			HttpGet httpGet = new HttpGet(
-					"http://localhost:8989/item/all?start_time=" + startTime + "&end_time=" + endTime);
 
+			URIBuilder builder = new URIBuilder("http://localhost:8989/item/all");
+			builder.addParameter("start_time", startTime);
+			builder.addParameter("end_time", endTime);
+			// 第二步：创建httpPost对象
+			HttpGet httpGet = new HttpGet(builder.build());
+			// 第三步：给httpPost设置JSON格式的参数
+			httpGet.setHeader("Content-type", "application/json");
 			// 第四步：发送HttpPost请求，获取返回值
-			String reString = httpClient.execute(httpGet, responseHandler); // 调接口获取返回值时，必须用此方法
-			// 。。。。。。。。
-			System.out.println("Ressutl:" + reString);
-
+			HttpResponse hr = httpClient.execute(httpGet); // responseHandler调接口获取返回值时，必须用此方法
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			// Response Body
+			String responseBody = responseHandler.handleResponse(hr);
+			if (responseBody != null && !responseBody.equals("")) {
+				Gson gson = new Gson();
+				List<Item> list = null;
+				try {
+					Type listType = new TypeToken<ArrayList<Item>>(){}.getType();
+					list = gson.fromJson(responseBody, listType);
+//					list = gson.fromJson(responseBody, List.class);
+				} catch (JsonSyntaxException ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
+					return new ResponseEntity<>(HttpStatus.OK);
+				}
+				return new ResponseEntity<List<Item>>(list, HttpStatus.OK);
+			}
+			// int statusCode = hr.getStatusLine().getStatusCode();
+			// System.out.println("statusCode:::" + statusCode+" resp:"+responseBody);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -329,6 +351,8 @@ public class ItemController {
 				e.printStackTrace();
 			}
 		}
+		return new ResponseEntity<>(HttpStatus.OK);
+		
 	}
 
 	// 請求postNewITEM
@@ -413,23 +437,37 @@ public class ItemController {
 	}
 
 	// 請求deleteITEM
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public void deleteItem(Item item) {
-
+	@DeleteMapping("/{itemid}")
+	public ResponseEntity<Result> deleteItem(@PathVariable("itemid") int itemid) {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-
-		ResponseHandler<String> responseHandler = new BasicResponseHandler();
 		try {
-			// 第一步：创建HttpClient对象
-			httpClient = HttpClients.createDefault();
+			/*
+			 * 添加参数到URL的尾巴
+			 */
+			URIBuilder builder = new URIBuilder("http://localhost:8989/item/"+itemid);
 			// 第二步：创建httpPost对象
-			HttpPost httpPost = new HttpPost("http://localhost:8989/item/all?itemid=" + item.getItemid());
-
+			HttpDelete httpDelete = new HttpDelete(builder.build());
+			// 第三步：给httpPost设置JSON格式的参数
+//			httpPost.setHeader("Content-type", "application/json");
 			// 第四步：发送HttpPost请求，获取返回值
-			String reString = httpClient.execute(httpPost, responseHandler); // 调接口获取返回值时，必须用此方法
-			// 。。。。。。。。
-			System.out.println("Ressutl:" + reString);
-
+			HttpResponse hr = httpClient.execute(httpDelete); // responseHandler调接口获取返回值时，必须用此方法
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			// Response Body
+			String responseBody = responseHandler.handleResponse(hr);
+			if (responseBody != null && !responseBody.equals("")) {
+				Gson gson = new Gson();
+				Result result = null;
+				try {
+					result = gson.fromJson(responseBody, Result.class);
+				} catch (JsonSyntaxException ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
+					return new ResponseEntity<>(HttpStatus.OK);
+				}
+				return new ResponseEntity<Result>(result, HttpStatus.OK);
+			}
+			// int statusCode = hr.getStatusLine().getStatusCode();
+			// System.out.println("statusCode:::" + statusCode+" resp:"+responseBody);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -442,6 +480,7 @@ public class ItemController {
 				e.printStackTrace();
 			}
 		}
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	// 請求editITEM
