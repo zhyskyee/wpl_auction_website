@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.jms.Destination;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.camel.language.Simple;
@@ -33,29 +34,127 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+//import utd.wpl.controller.UserController.JsonDateDeserializer;
 import utd.wpl.pojo.Item;
 import utd.wpl.pojo.Result;
 import utd.wpl.pojo.User;
-
+import utd.wpl.service.BidService;
 //import com.github.kevinsawicki.http.HttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 //import com.fasterxml.jackson.databind.util.JSONPObject;
 
 @RestController
 @RequestMapping("/item")
+//@ContextConfiguration("/spring/application-activemq.xml")
 public class ItemController {
+	
+	class JsonDateDeserializer implements JsonDeserializer<Date> {
+		@Override
+		public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+				throws JsonParseException {
+			// TODO Auto-generated method stub
+			String s = json.getAsJsonPrimitive().getAsString();
+			long l = Long.parseLong(s);
+			return new Date(l);
+		}
+	}
+	@Autowired
+	private BidService bidService;
+	@Autowired
+	@Qualifier("queueDestination")
+	private Destination destination;
+	
+	@PostMapping(value = "/bid")
+	public ResponseEntity<Result> bidForItem(@RequestBody Map map, HttpServletRequest request) {
+		User fUser = (User) request.getSession().getAttribute("user");
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("itemid", map.get("itemid"));
+		jsonObject.put("bidderid", fUser.getUserid());
+		jsonObject.put("price", map.get("price"));
+		Date date = new Date();
+		String objStr = jsonObject.toString();
+		Result result = new Result();
+		result.setAnswer("fail");
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		try {
+			// 第一步：创建HttpClient对象
+			httpClient = HttpClients.createDefault();
+			/*
+			 * 添加参数到URL的尾巴
+			 */
+			URIBuilder builder = new URIBuilder("http://localhost:8989/item/"+map.get("itemid"));
+			// 第二步：创建httpPost对象
+			HttpGet httpGet = new HttpGet(builder.build());
+			// 第三步：给httpPost设置JSON格式的参数
+			httpGet.setHeader("Content-type", "application/json");
+			// 第四步：发送HttpPost请求，获取返回值
+			HttpResponse hr = httpClient.execute(httpGet); // responseHandler调接口获取返回值时，必须用此方法
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			// Response Body
+			String responseBody = responseHandler.handleResponse(hr);
+			if (responseBody != null && !responseBody.equals("")) {
+//				Gson gson = new Gson();
+				Item item = null;
+				Gson gson1 = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
+//				User repUser = null;
+				try {
+					item = gson1.fromJson(responseBody, Item.class);
+					System.out.println(
+							"Response From B:" + item.getDescription() + " date:" + item.getAuction_date());
+					Date date2 = item.getAuction_date();
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(date2);
+					calendar.add(Calendar.MINUTE, 20);
+					date2 = calendar.getTime();
+					System.out.println("Auction_End_time:"+date2+ "   | request_reive_time:"+ date);
+//					if (date2.getTime() < date.getTime()) {
+//						return new ResponseEntity<Result>(result, HttpStatus.OK);
+//					}
+					System.out.println("====>Send a bid<======");
+					bidService.sendBidRequest(destination, objStr);
+					result.setAnswer("success");
+					return new ResponseEntity<Result>(result, HttpStatus.OK);
+//					result.setAnswer("Success");
+				} catch (JsonSyntaxException ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
+					return new ResponseEntity<>(HttpStatus.OK);
+				}
+			}
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		finally {
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return new ResponseEntity<Result>(result, HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/timeslots")
 	public ResponseEntity<List<Result>> getDateTimeSlots(@RequestParam("date") String datestr) {
 //		String datestr = (String) map.get("date");

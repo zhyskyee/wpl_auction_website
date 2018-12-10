@@ -22,10 +22,10 @@ public class Bid implements Serializable{
 	}
 	
 	private int itemid;
-	private int ownerid;
+//	private int ownerid;
 	private int bidderid;
-	private double bidprice;
-	private Date timestamp;
+	private double price;
+//	private Date timestamp;
 
 	public int getItemid() {
 		return itemid;
@@ -33,28 +33,28 @@ public class Bid implements Serializable{
 	public void setItemid(int itemid) {
 		this.itemid = itemid;
 	}
-	public int getOwnerid() {
-		return ownerid;
-	}
-	public void setOwnerid(int ownerid) {
-		this.ownerid = ownerid;
-	}
+//	public int getOwnerid() {
+//		return ownerid;
+//	}
+//	public void setOwnerid(int ownerid) {
+//		this.ownerid = ownerid;
+//	}
 	public int getBidderid() {
 		return bidderid;
 	}
 	public void setBidderid(int bidderid) {
 		this.bidderid = bidderid;
 	}
-	public double getBidprice() {
-		return bidprice;
+	public double getPrice() {
+		return price;
 	}
-	public void setBidprice(double bidprice) {
-		this.bidprice = bidprice;
+	public void setPrice(double price) {
+		this.price = price;
 	}
-	public Date getTimestamp() {
-		return timestamp;
-	}
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
+//	public Date getTimestamp() {
+//		return timestamp;
+//	}
+//	public void setTimestamp(Date timestamp) {
+//		this.timestamp = timestamp;
+//	}
 }
