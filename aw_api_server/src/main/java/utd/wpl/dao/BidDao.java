@@ -14,5 +14,5 @@ import utd.wpl.pojo.Bid;
 ***********************************************/
 public interface BidDao {
 	int addBidRecord(@Param("bid") Bid bid);
-	List<Bid> getBidRecordsByIds(@Param("itemid") Integer itemid, @Param("ownerid") Integer ownerid, @Param("bidderid") Integer bidderid);
+	List<Bid> getBidRecordsByIds(@Param("itemid") String itemid, @Param(value ="ownerid") String ownerid, @Param("bidderid") String bidderid);
 }

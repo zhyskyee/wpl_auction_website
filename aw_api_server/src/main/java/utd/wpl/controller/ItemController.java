@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.YamlProcessor.ResolutionMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -69,7 +70,7 @@ public class ItemController {
 		Date date_cutime;
 		try {
 			date_cutime = sdf.parse(time);
-			System.out.println(date_cutime); // prints 10-04-2018
+			System.out.println("Bserver_getcurItem:"+date_cutime); // prints 10-04-2018
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -97,6 +98,27 @@ public class ItemController {
 		}
 		List<Item> list = itemService.findAllItems(date_st, date_et);
 		if (list == null) {
+			return new ResponseEntity<List<Item>>(HttpStatus.OK);
+		}
+		return new ResponseEntity<List<Item>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/allpost")
+	public ResponseEntity<List<Item>> getAllPostItem(@RequestParam("ownerid") int ownerid, @RequestParam("time") String time) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date;
+		try {
+			date = sdf.parse(time);
+//			System.out.println(date_st+" --- "+date_et); // prints 10-04-2018
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		List<Item> list = itemService.findAllPostItems(ownerid, date);
+		if (list == null) {
+			System.out.println("B ser postItems:NULL");
+
 			return new ResponseEntity<List<Item>>(HttpStatus.OK);
 		}
 		return new ResponseEntity<List<Item>>(list, HttpStatus.OK);
@@ -142,6 +164,7 @@ public class ItemController {
 	@DeleteMapping(value = "/{itemid}")
 	public ResponseEntity<Result> deleteItem(@PathVariable("itemid") int itemid) {
 		Result result = new Result();
+		result.setAnswer("success");
 		if (itemService.deleteItemByItemId(itemid) == 0) {
 			result.setAnswer("Fails to deleteItem for unknown");
 			return new ResponseEntity<Result>(result, HttpStatus.OK);
@@ -149,39 +172,32 @@ public class ItemController {
 		return new ResponseEntity<Result>(HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/owner")
-	public ResponseEntity<Result> updateOwner(@RequestBody Map map) {
-		String ownerId = map.get("ownerid").toString();
-		String itemId = map.get("itemid").toString();
-		Result result = new Result();
-		if (itemService.updateItemOwner(Integer.parseInt(itemId), Integer.parseInt(ownerId)) == 0) {
-			result.setAnswer("Fails to updateItemOwner for unknown");
-			return new ResponseEntity<Result>(result, HttpStatus.OK);
+//	@PostMapping(value = "/owner")
+	public void updateOwner(Bid bid) {
+		if (itemService.updateItemOwner(Integer.valueOf(bid.getItemid()), Integer.valueOf(bid.getBidderid())) == 0) {
+			System.out.println("Fatal: fail to update owner!!!!");
 		}
-		
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/price")
-	public ResponseEntity<Result> updateAuctionPrice(@RequestBody Map<String, String> map) {
-		int itemid = Integer.parseInt(map.get("itemid"));
-		double bidprice = Double.parseDouble(map.get("bidprice"));
-		Result result = new Result();
+//	@PostMapping(value = "/price")
+	public void updateAuctionPrice(Bid bid) {
+		int itemid = bid.getItemid();
+		double bidprice = bid.getPrice();
+
 		Item item = itemService.findItemByItemId(itemid);
 		if (item == null) {
-			result.setAnswer("Item["+itemid+"] not in server");
-			return new ResponseEntity<Result>(result, HttpStatus.OK);
+			System.out.println("Item["+itemid+"] not in server");
+			return;
 		}
 		if (bidprice <= item.getDeal_Price()) {
-			result.setAnswer("The bidding price is lower");
-			return new ResponseEntity<Result>(result, HttpStatus.OK);
+			System.out.println("The bidding price is lower");
+			return;
 		}
 		if (itemService.updateItemDealPrice(itemid, bidprice) == 0) {
-			result.setAnswer("Fails to updateItemDealPrice for unknown");
-			return new ResponseEntity<Result>(result, HttpStatus.OK);
+			System.out.println("Fails to updateItemDealPrice for unknown");
+			return;
 		}
-		
-		return new ResponseEntity<Result>(result, HttpStatus.OK);
+		updateOwner(bid);
 	}
 	
 	@PostMapping(value = "/bid")
@@ -193,15 +209,39 @@ public class ItemController {
 			result.setAnswer("Fails to addBidRecord for unknown");
 			return new ResponseEntity<Result>(result, HttpStatus.OK);
 		}
+		updateAuctionPrice(bb);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/bid")
-	public ResponseEntity<List<Bid>> getBidRecords(@RequestBody Map map) {
-		Integer itemid = Integer.parseInt(map.get("itemid").toString());
-		Integer ownerid = Integer.parseInt(map.get("ownerid").toString());
-		Integer bidderid = Integer.parseInt(map.get("bidderid").toString());
-		List<Bid> list = itemService.getBidRecords(itemid, ownerid, bidderid);
+	public ResponseEntity<List<Bid>> getBidRecords(@RequestParam("itemid") String itemids, @RequestParam(value = "ownerid", required = false) String ownerids, @RequestParam(value = "bidderid", required = false) String bidderids) {//
+//		Integer itemid = Integer.parseInt(itemids);
+//		Integer ownerid = Integer.parseInt(ownerids);
+//		Integer bidderid = Integer.parseInt(bidderids);
+		List<Bid> list = itemService.getBidRecords(itemids, ownerids, bidderids); //
 		return new ResponseEntity<List<Bid>>(list, HttpStatus.OK);
+	}
+	
+	@PostMapping("/setime")
+	public ResponseEntity<Result> resetItemTime(@RequestParam Map<String, String> map) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println("-------->"+map.get("itemid"));
+		int itemid = Integer.parseInt(map.get("itemid"));
+		Date date = null;
+		Result result = new Result();
+		result.setAnswer("fail");
+		try {
+			date = sdf.parse(map.get("auction_date"));
+			System.out.println("-------->"+date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (itemService.updateItemAuctionDate(itemid, date) == 1) {
+			result.setAnswer("success");
+		}
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

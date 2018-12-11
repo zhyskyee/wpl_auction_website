@@ -40,6 +40,10 @@ public class ItemService {
 //	private final static String memCurItem = "curItem";
 	private final static String memPrefix = "itemid";
 	private final static int auction_gap = 20; // 20 min
+	public int updateItemAuctionDate(int itemid, Date date) {
+		return itemDao.updateItemAuctionDate(itemid, date);
+	}
+	
 	public int updateItemDealPrice(int itemid, double deal_price) {
 		Item item = this.findItemByItemId(itemid);
 		item.setDeal_Price(deal_price);
@@ -56,6 +60,10 @@ public class ItemService {
 	
 	public List<Item> findAllItems(Date start_time, Date end_time) {
 		return itemDao.findAllItems(start_time, end_time);
+	}
+	
+	public  List<Item> findAllPostItems(int ownerid, Date time) {
+		return itemDao.findAllPostItems(ownerid, time);
 	}
 	
 	public List<Result> getAvaTimeSlotsByDate(Date date) {
@@ -131,7 +139,7 @@ public class ItemService {
 	public int addBidRecord(Bid bid) {
 		return bidDao.addBidRecord(bid);
 	}
-	public List<Bid> getBidRecords(Integer itemid, Integer ownerid, Integer bidderid) {
+	public List<Bid> getBidRecords(String itemid, String ownerid, String bidderid) {
 		return bidDao.getBidRecordsByIds(itemid, ownerid, bidderid);
 	}
 }

@@ -10,6 +10,8 @@ CREATE TABLE 'user' (
     'photo' mediumblob,
     'last_visit' datetime) engine="innodb";
 
+insert into user (username, password, email) values ('admin', '21232f297a57a5a743894a0e4a801fc3', 'admin');
+
 DROP TABLE IF EXISTS `item`;
 CREATE TABLE item (
     itemid int AUTO_INCREMENT,
@@ -28,7 +30,7 @@ DROP TABLE IF EXISTS bid_item;
 CREATE TABLE bid_item (
     itemid int not null,
     bidderid int not null,
-    price decimal(11,2),
-    primary key(itemid, bidderid),
+    price decimal(11,2) not null,
+    primary key(itemid, bidderid, price),
     foreign key(itemid) references item(itemid),
     foreign key(bidderid) references user(userid)) engine="innodb";

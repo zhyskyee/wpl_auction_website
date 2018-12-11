@@ -31,6 +31,18 @@ public class UserService {
 			return 0;
 		}
 	}
+	public int updateProfile(String username, String phone, String email) {
+		User cuUser;
+		userDao.updateEmail(username, email);
+		userDao.updatePhone(username, phone);
+		
+		if ((cuUser = (User) memCachedClient.get(username)) != null) {
+			cuUser.setPhone(phone);;
+			memCachedClient.set(username, cuUser);
+		}
+			return 1;
+	}
+	
 	
 	/**
 	 * 查询用户信息
@@ -81,15 +93,15 @@ public class UserService {
 	/*
 	 * update user's Photo
 	 * */
-	public int updatePhoto(User user) {
-		if (userDao.updatePhoto(user) == 1) {
-			if (memCachedClient.get(user.getUsername()) != null) {
-				memCachedClient.set(user.getUsername(), user);
-			}
-			return 1;
-		} else {
-			return 0;
-		}
-	}
+//	public int updatePhoto(User user) {
+//		if (userDao.updatePhoto(user) == 1) {
+//			if (memCachedClient.get(user.getUsername()) != null) {
+//				memCachedClient.set(user.getUsername(), user);
+//			}
+//			return 1;
+//		} else {
+//			return 0;
+//		}
+//	}
 	
 }

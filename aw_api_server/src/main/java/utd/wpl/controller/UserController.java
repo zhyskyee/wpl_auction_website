@@ -107,4 +107,15 @@ public class UserController {
 		}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	@PostMapping("/profile")
+	public ResponseEntity<Result> updateProfile(RequestEntity<User> requestEntity) {
+		User findUser = requestEntity.getBody();
+		Result result = new Result();
+		result.setAnswer("fail");
+		if (userService.updateProfile(findUser.getUsername(), findUser.getPhone(), findUser.getEmail()) == 1) {
+			result.setAnswer("success");
+		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }

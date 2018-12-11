@@ -26,9 +26,12 @@
 	</insert>
 	
 	<!-- 4.更新最后访问时间 -->
-	<insert id="updatePhoto" parameterType="user">
-		update user set photo = #{photo} where username = #{username}
-	</insert>
+	<update id="updatePhone" parameterType="user">
+		update user set phone = #{phone} where username = #{username}
+	</update>
+	<update id="updateEmail" parameterType="user">
+		update user set email = #{email} where username = #{username}
+	</update>
 	
 	<update id="updatePassword">
 		update user set password = #{pswd} where username = #{username}

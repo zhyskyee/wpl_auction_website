@@ -12,7 +12,7 @@
 	<resultMap type="utd.wpl.pojo.Bid" id="bids">
 		<result column="itemid" property="itemid"/>
 		<!-- <result column="ownerid" property="ownerid"/> -->
-		<result column="bidderid" property="bidder"/>
+		<result column="bidderid" property="bidderid"/>
 		<result column="price" property="price"/>
 		<!-- <result column="timestamp" property="timestamp"/> -->
 	</resultMap>
