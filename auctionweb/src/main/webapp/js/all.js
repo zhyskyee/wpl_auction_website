@@ -51,6 +51,7 @@ $(document).ready(function() {
 //			            		console.log( data2[i].auction_date);
 //			            		console.log( data2[i].min_price);
 			            }
+			            $("#tableAjax").html(tableStr);
 					},
 					error : function(err) {
 						alert("Error loading JS File"
