@@ -490,7 +490,7 @@ public class ItemController {
 			System.out.println("原始文件名:" + fileName);
 	 
 			// 新文件名
-			String newFileName = map.get("title")+ "_" + fileName;
+			String newFileName = map.get("title")+ ".jpg";
 //           String path = request.getServletContext().getRealPath("/images/");
 	        ServletContext sc = request.getSession().getServletContext();
 	        // 上传位置

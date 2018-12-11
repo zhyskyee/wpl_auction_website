@@ -234,22 +234,42 @@ public class UserController {
 			// Response Body
 			String responseBody = responseHandler.handleResponse(hr);
 			System.out.println("Result:" + responseBody);
-			Gson gson = new Gson();
-			User repUser = null;
-			try {
-				repUser = gson.fromJson(responseBody, User.class);
-//				String imgPathStr = "/images/"+repUser.getUsername()+"_photo.jpg";
-//				if (ImageUtils.baseStrToImg(repUser.getPhoto(), imgPathStr)) {
-//					//保存图片成功！
-//					repUser.setPhoto(imgPathStr.getBytes());
+			User repUser = new User();
+			if (isJSONValid2(responseBody)) {
+				JSONObject jsonObject = new JSONObject(responseBody);
+				repUser.setUsername(jsonObject.getString("username"));
+				repUser.setEmail(jsonObject.getString("email"));
+				long l = jsonObject.getLong("last_visit");
+				repUser.setLast_visit(new Date(l));
+				repUser.setPassword(jsonObject.getString("password"));
+				repUser.setPhone(jsonObject.getString("phone"));
+				repUser.setUserid(jsonObject.getInt("userid"));
+				String img = jsonObject.getString("photo");
+				System.out.println(">>>>>>>"+img);
+//				String file_path = "/images/"+repUser.getUsername()+"_img.jpg";
+//				System.out.println("==>"+file_path);
+//				if (ImageUtils.baseStrToImg(img.getBytes(), file_path)) {
+				repUser.setPhoto(img.getBytes());
 //				}
-				System.out.println("Response From B:" + repUser.getUsername());
-				repUser.setPassword(null);
-			} catch (JsonSyntaxException ex) {
-				// TODO: handle exception
-				ex.printStackTrace();
-				// return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}
+				System.out.println(
+						"Response From B:" + repUser.getUsername() + " date:" + repUser.getLast_visit());
+			} 
+//			Gson gson = new Gson();
+//			User repUser = null;
+//			try {
+//				repUser = gson.fromJson(responseBody, User.class);
+////				String imgPathStr = "/images/"+repUser.getUsername()+"_photo.jpg";
+////				if (ImageUtils.baseStrToImg(repUser.getPhoto(), imgPathStr)) {
+////					//保存图片成功！
+////					repUser.setPhoto(imgPathStr.getBytes());
+////				}
+//				System.out.println("Response From B:" + repUser.getUsername());
+//				repUser.setPassword(null);
+//			} catch (JsonSyntaxException ex) {
+//				// TODO: handle exception
+//				ex.printStackTrace();
+//				// return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//			}
 			return new ResponseEntity<User>(repUser, HttpStatus.OK);
 
 		} catch (Exception e) {

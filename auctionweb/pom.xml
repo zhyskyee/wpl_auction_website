@@ -283,6 +283,17 @@
 				<configuration>
 					<path>/</path>
 					<port>8080</port>
+					<protocol>org.apache.coyote.http11.Http11NioProtocol</protocol>
+				     <scheme>https</scheme>
+				     <httpsPort>8443</httpsPort>    
+		              <keystoreFile>${basedir}/certificates/shfqkeystore.jks</keystoreFile>
+		              <keystorePass>12311231</keystorePass>
+		           	<maxThreads>150</maxThreads>
+		              <secure>true</secure> 
+		              <SSLEnabled>true</SSLEnabled>
+		              <clientAuth>false</clientAuth> 
+		              <sslProtocol>TLS</sslProtocol>
+		              <redirectPort>8443</redirectPort>
 				</configuration>
 			</plugin>
 			<!-- java编译插件 -->
