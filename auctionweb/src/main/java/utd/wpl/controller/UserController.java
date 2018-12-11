@@ -1,7 +1,11 @@
 package utd.wpl.controller;
 
 import com.google.gson.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -10,7 +14,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.HttpRequest;
@@ -43,6 +49,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -152,6 +159,11 @@ public class UserController {
 			User repUser = null;
 			try {
 				repUser = gson.fromJson(responseBody, User.class);
+				String imgPathStr = "/images/"+repUser.getUsername()+"_photo.jpg";
+				if (ImageUtils.baseStrToImg(repUser.getPhoto(), imgPathStr)) {
+					//保存图片成功！
+					repUser.setPhoto(imgPathStr.getBytes());
+				}
 				System.out.println("Response From B:" + repUser.getUsername());
 				repUser.setPassword(null);
 			} catch (JsonSyntaxException ex) {
@@ -235,8 +247,9 @@ public class UserController {
 					try {
 						repUser = gson1.fromJson(responseBody1, User.class);
 						String file_path = "images/"+repUser.getUsername()+"_img"+".jpg";
-						ImageUtils.baseStrToImg(repUser.getPhoto(), file_path);
-						repUser.setPhoto(file_path.getBytes());
+						if (ImageUtils.baseStrToImg(repUser.getPhoto(), file_path)) {
+							repUser.setPhoto(file_path.getBytes());
+						}
 						System.out.println(
 								"Response From B:" + repUser.getUsername() + " date:" + repUser.getLast_visit());
 						request.getSession().setAttribute("user", repUser);
@@ -277,23 +290,64 @@ public class UserController {
 		r.setAnswer("Fail");
 		return new ResponseEntity<>(r, HttpStatus.OK);
 	}
+	
+	  @RequestMapping(value = "/testpic", method = RequestMethod.POST)
+	    public ResponseEntity<Result> testpic(HttpServletRequest request, User user, @RequestPart("pic") MultipartFile avator) { //@RequestParam("test") String test
+	        //MultipartFile 接口有很多方法，这只是其中一个。
+		  Result result = new Result();
+		  result.setAnswer("laalal");
+		  System.out.println("=======>"+ user.getUsername());
+	        try {
+	        System.out.println(request.getServletPath());	
+	      //上传文件路径
+	        String fileName = avator.getOriginalFilename();
+			System.out.println("原始文件名:" + fileName);
+	 
+			// 新文件名
+			String newFileName = UUID.randomUUID() + fileName;
+//            String path = request.getServletContext().getRealPath("/images/");
+	        ServletContext sc = request.getSession().getServletContext();
+	        // 上传位置
+			String path = sc.getRealPath("/images") + "/"; // 设定文件保存的目录
+			File f = new File(path);
+			if (!f.exists())
+				f.mkdirs();
+			if (!path.isEmpty()) {
+				try {
+					FileOutputStream fos = new FileOutputStream(path + newFileName);
+					InputStream in = avator.getInputStream();
+					int b = 0;
+					while ((b = in.read()) != -1) {
+						fos.write(b);
+					}
+					fos.close();
+					in.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+	 
+			System.out.println("上传图片到:" + path + newFileName);
+			
+            //上传文件名
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	        }
+	        return new ResponseEntity<Result>(result, HttpStatus.OK);
+	    }
 
 	// 用户注册
 //	@Bean(name = "multipartResolver")
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ResponseEntity<Result> register(RequestEntity<User> entity, @RequestParam("confirmPass") String confirmPass) throws IOException {
+	public ResponseEntity<Result> register(HttpServletRequest request, String confirmPass ,User user, @RequestPart("pic") MultipartFile avator) throws IOException {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-		User user = entity.getBody();
-//		if (file == null || file.isEmpty()) {
-//			System.out.println("There is not such file!!!");
-//		}
-//		user.setPhoto();
 		System.out.println("Leng====>"+user.getPhoto().length);
 		JSONObject object = new JSONObject();
 		object.put("username", user.getUsername());
 		object.put("password", user.getPassword());
 		object.put("email", user.getEmail());
 		object.put("phone", user.getPhone());
+		user.setPhoto(ImageUtils.imgToBaseStr(avator.getInputStream()));
 		object.put("photo", user.getPhoto());
 		try {
 			// 第一步：创建HttpClient对象

@@ -43,12 +43,10 @@ public class ImageUtils {
 		}
 	}
 
-	public static String imgToBaseStr(String imgFilePath) {
-		InputStream in = null;
+	public static byte[] imgToBaseStr(InputStream in) {
 		byte[] data = null;
 		// 读取图片字节数组
 		try {
-			in = new FileInputStream(imgFilePath);
 			data = new byte[in.available()];
 			in.read(data);
 			in.close();
@@ -56,6 +54,6 @@ public class ImageUtils {
 			e.printStackTrace();
 		}
 		// 对字节数组Base64编码
-		return Base64.getEncoder().encodeToString(data); // 返回Base64编码过的字节数组字符串
+		return Base64.getEncoder().encodeToString(data).getBytes(); // 返回Base64编码过的字节数组字符串
 	}
 }

@@ -37,7 +37,31 @@
               } );
           } );
        
-          var table = $('#dtBasic').DataTable( {
+          var table = $('#dtBasic1').DataTable( {
+              orderCellsTop: true,
+              fixedHeader: true,
+              scrollX: true
+          } );
+          $('.dataTables_length').addClass('bs-select');
+          
+          
+          
+          $('#dtBasic1 thead tr').clone(true).appendTo( '#dtBasic1 thead' );
+          $('#dtBasic1 thead tr:eq(1) th').each( function (i) {
+              var title = $(this).text();
+              $(this).html('<input type="text" placeholder="Search '+title+'">');
+              
+              $( 'input', this ).on( 'keyup change', function () {
+                  if ( table.column(i).search() !== this.value ) {
+                      table
+                          .column(i)
+                          .search( this.value )
+                          .draw();
+                  }
+              } );
+          } );
+       
+          var table = $('#dtBasic1').DataTable( {
               orderCellsTop: true,
               fixedHeader: true,
               scrollX: true
@@ -72,7 +96,7 @@
             <li class="nav-item">
               <a class="nav-link" href="${pageContext.request.contextPath}/profile">Profile</a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
               <a class="nav-link" href="${pageContext.request.contextPath}/order">Order<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
@@ -121,7 +145,7 @@
         </div>
 
         <!-- edit form column -->
-        <div class="col-md-9 table-responsive">
+        <div class="col-md-12 table-responsive">
           <h3>Order info</h3>
            <table id="dtBasic" class="display datatable table-striped table-bordered table-sm" cellspacing="0" width="100%">
            <thead>
@@ -158,6 +182,45 @@
                 <th></th>
                 <th></th>
                 <th></th><th></th><th></th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+          <br><br><br>
+          
+          
+
+      </div>
+          
+          
+       <div class="col-md-12 table-responsive">
+          <div class="form-group">
+             <label class="col-12 control-label">Select an Item Id</label>
+              <div class="col-8">
+                  <div class="inline-block">
+                      <input id="selectitemid" class="form-control" type="text" />
+                  </div>
+              </div>
+              <button class="btn btn-danger" id="selectbutton1">Show!</button>
+             </div>
+          <h3>Bid History</h3>
+           <table id="dtBasic1" class="display datatable table-striped table-bordered table-sm" cellspacing="0" width="100%">
+           <thead>
+              <tr>
+                <th class="th-sm">Bidder
+                  <i class="fa fa-sort" aria-hidden="true"></i>
+                </th>
+                <th class="th-sm">Price
+                  <i class="fa fa-sort" aria-hidden="true"></i>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="tableAjax1">
+
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
                 <th></th>
               </tr>
             </tfoot>

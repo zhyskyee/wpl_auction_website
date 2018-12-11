@@ -34,6 +34,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,8 +48,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import utd.wpl.Utils.ImageUtils;
+import utd.wpl.pojo.Bid;
 //import utd.wpl.controller.UserController.JsonDateDeserializer;
 import utd.wpl.pojo.Item;
 import utd.wpl.pojo.Result;
@@ -84,6 +89,56 @@ public class ItemController {
 	@Autowired
 	@Qualifier("queueDestination")
 	private Destination destination;
+	
+	@GetMapping(value = "/allbids")
+	public ResponseEntity<List<Bid>> getItemAllBids(@RequestParam("itemid") String itemid) {
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+//		JSONObject jsonObject = new JSONObject();
+//		jsonObject.put("itemid", itemid);
+		try {
+			// 第一步：创建HttpClient对象
+			httpClient = HttpClients.createDefault();
+			/*
+			 * 添加参数到URL的尾巴
+			 */
+			URIBuilder builder = new URIBuilder("http://localhost:8989/item/bid");
+			builder.addParameter("itemid", itemid);
+			// 第二步：创建httpPost对象
+			HttpGet httpGet = new HttpGet(builder.build());
+			// 第三步：给httpPost设置JSON格式的参数
+			httpGet.setHeader("Content-type", "application/json");
+			// 第四步：发送HttpPost请求，获取返回值
+			HttpResponse hr = httpClient.execute(httpGet); // responseHandler调接口获取返回值时，必须用此方法
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			// Response Body
+			String responseBody = responseHandler.handleResponse(hr);
+			if (responseBody != null && !responseBody.equals("")) {
+//				Gson gson = new Gson();
+				List<Bid> list = null;
+				try {
+//					list = gson.fromJson(responseBody, List.class);
+					Type listType = new TypeToken<ArrayList<Bid>>(){}.getType();
+					list = new Gson().fromJson(responseBody, listType);
+				} catch (JsonSyntaxException ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
+				}
+				return new ResponseEntity<List<Bid>>(list, HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		finally {
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 	
 	@PostMapping(value = "/bid")
 	public ResponseEntity<Result> bidForItem(@RequestBody Map map, HttpServletRequest request) {
@@ -219,7 +274,7 @@ public class ItemController {
 	}
 	
 	@GetMapping("/curitem")
-	public String getCurItem(HttpServletRequest request) {
+	public ResponseEntity<Item> getCurItem(HttpServletRequest request) {
 //		System.out.println("-----====>"+map.get("date"));
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date = sdf.format(new Date());
@@ -242,21 +297,22 @@ public class ItemController {
 			
 			String responseBody = responseHandler.handleResponse(hr);
 			System.out.println("A from B: responseBody:"+responseBody);
-			return responseBody;
-//			if (responseBody != null && !responseBody.equals("")) {
-////				Gson gson = new Gson();
-////				Item item;
-//				Item item = null;
-//				Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
-//				try {
-//					item = gson.fromJson(responseBody, Item.class);
-//				} catch (JsonSyntaxException ex) {
-//					// TODO: handle exception
-//					ex.printStackTrace();
-//					return new ResponseEntity<>(HttpStatus.OK);
-//				}
-//				return new ResponseEntity<Item>(item, HttpStatus.OK);
-//			}
+//			return responseBody;
+			if (responseBody != null && !responseBody.equals("")) {
+				Item item = null;
+				Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
+				try {
+					item = gson.fromJson(responseBody, Item.class);
+					String file_path = "images/"+item.getTitle()+"_img"+".jpg";
+					if (ImageUtils.baseStrToImg(item.getPhoto(), file_path)) {
+						item.setPhoto(file_path.getBytes());
+					}
+				} catch (JsonSyntaxException ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
+				}
+				return new ResponseEntity<Item>(item, HttpStatus.OK);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -414,7 +470,7 @@ public class ItemController {
 
 	// 請求postNewITEM
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public ResponseEntity<Result> postNewItem(@RequestBody Map<String, String> map, HttpServletRequest request) { //, @RequestParam("auction_date") String ad
+	public ResponseEntity<Result> postNewItem(HttpServletRequest request, @RequestPart("pic") MultipartFile avator, @RequestBody Map<String, String> map) throws JSONException, IOException {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		JSONObject object = new JSONObject();
 		object.put("title", map.get("title"));
@@ -423,7 +479,8 @@ public class ItemController {
 		System.out.println("=====>"+map.get("address"));
 		object.put("description", map.get("description"));
 		System.out.println("=====>"+map.get("description"));
-		object.put("photo", map.get("photo"));
+	
+		object.put("photo", ImageUtils.imgToBaseStr(avator.getInputStream()));
 		System.out.println("=====>"+map.get("photo"));
 //		object.put("auction_date", map.get("auction_date"));
 		User owner = (User) request.getSession().getAttribute("user");

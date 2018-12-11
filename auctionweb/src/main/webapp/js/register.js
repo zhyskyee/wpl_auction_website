@@ -13,23 +13,23 @@ $(document).ready(function() {
 		return re.test(String(phone).toLowerCase());
 	}
 
-	var img = document.getElementById('photo');
-	var start = document.getElementById('start');
-	start.addEventListener('click', startt);  
+//	var img = document.getElementById('photo');
+//	var start = document.getElementById('start');
+//	start.addEventListener('click', startt);  
 	/*转换函数*/  
-	var base64 = null;
-    function startt() {  
-        var imgFile = new FileReader();  
-        console.log(typeof img.files[0]);
-        imgFile.readAsDataURL(img.files[0]);  
-        imgFile.onload = function () {  
-        	base64 = this.result; //base64数据    
-        	console.log(base64);
-//            imgShow.setAttribute('src', imgData);  
-//            conte.value = imgData;  
-//            len.innerHTML += imgData.length;  
-        }  
-    }  
+//	var base64 = null;
+//    function startt() {  
+//        var imgFile = new FileReader();  
+//        console.log(typeof img.files[0]);
+//        imgFile.readAsDataURL(img.files[0]);  
+//        imgFile.onload = function () {  
+//        	base64 = this.result; //base64数据    
+//        	console.log(base64);
+////            imgShow.setAttribute('src', imgData);  
+////            conte.value = imgData;  
+////            len.innerHTML += imgData.length;  
+//        }  
+//    }  
 	
 	$("#submitregister").click(
 			function(e) {
@@ -126,10 +126,14 @@ $(document).ready(function() {
 			        return url;
 			    }
                 var tourl = addURLParam("http://localhost:8080/user/register", "confirmPass", confirmPass);
-                console.log("reg:::", tourl)
+//                console.log("reg:::", tourl)
 //                base64($('input[type="file"]'), function(data)
 //                 {
-                console.log(base64);
+//                console.log(base64);
+                
+                 var formData = new FormData($('form')[0]);
+                
+                  console.log(formData);
 				    $.ajax({
 					url : tourl,
 					type : 'post',
@@ -140,9 +144,9 @@ $(document).ready(function() {
 						'password' : password,
 						'email':email,
 						'phone':phone,
-						'photo':base64
+						'photo':formData
 					}),
-					// console.log(data);
+					console.log(data);
 					success : function(data) {
 						console.log(data);
 						var datajson = JSON.parse(data);

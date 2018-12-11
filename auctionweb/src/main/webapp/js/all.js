@@ -60,5 +60,50 @@ $(document).ready(function() {
 				});
 
 			});
+	$("#selectbutton1").click(
+			function(e) {
+				e.preventDefault();
+				var itemid = $("#selectitemid").val();
+				
+				console.log(itemid);
+				var tourl =  "http://localhost:8080/item/allbids" +  "?"+"itemid="+itemid;
+				console.log(tourl);
+				$.ajax({
+					url : tourl,
+					type : 'get',
+					dataType : 'text',
+					contentType : "application/json;charset=utf-8",
+
+					success : function(data) {
+						console.log(data);
+						var data2 = $.parseJSON(data);
+			            var tableStr = "";
+			            var len = data2.length;
+			            console.log(data[1]);
+			            for ( var i = 0; i < len; i++) {
+			            	var bidderid = data2[i].bidderid;
+			            	var price = data2[i].price;
+			            	
+			             tableStr = tableStr + "<tr>"
+			               +"<td>"+ bidderid + "</td>"
+			               +"<td>"+  price+ "</td>"
+			               +"</tr>";
+			            		console.log( data2[i].bidderid);
+			            		console.log( data2[i].price);
+//			            		console.log( data2[i].ownerid);
+//			            		console.log( data2[i].address);
+//			            		console.log( data2[i].description);
+//			            		console.log( data2[i].auction_date);
+//			            		console.log( data2[i].min_price);
+			            }
+			            $("#tableAjax1").html(tableStr);
+					},
+					error : function(err) {
+						alert("Error loading JS File"
+								+ err);
+					}
+				});
+
+			});
 	
 })
