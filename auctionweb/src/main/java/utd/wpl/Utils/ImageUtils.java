@@ -26,15 +26,16 @@ public class ImageUtils {
 		}
 		try {
 			// Base64解码
-			byte[] bytes = Base64.getDecoder().decode(base);
-			for (int i = 0; i < bytes.length; ++i) {
-				if (bytes[i] < 0) {// 调整异常数据
-					bytes[i] += 256;
-				}
-			}
+//			byte[] bytes = Base64.getDecoder().decode(base);
+//			for (int i = 0; i < bytes.length; ++i) {
+//				if (bytes[i] < 0) {// 调整异常数据
+//					bytes[i] += 256;
+//				}
+//			}
 			// 生成jpeg图片
 			OutputStream out = new FileOutputStream(imgFilePath);
-			out.write(bytes);
+			System.out.println("========outputAImgTO>>>"+imgFilePath);
+			out.write(base);
 			out.flush();
 			out.close();
 			return true;
@@ -54,6 +55,6 @@ public class ImageUtils {
 			e.printStackTrace();
 		}
 		// 对字节数组Base64编码
-		return Base64.getEncoder().encodeToString(data).getBytes(); // 返回Base64编码过的字节数组字符串
+		return data; // 返回Base64编码过的字节数组字符串
 	}
 }

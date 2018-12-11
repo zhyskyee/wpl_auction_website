@@ -488,6 +488,7 @@ public class ItemController {
 		object.put("ownerid", String.valueOf(owner.getUserid()));
 		object.put("min_price", map.get("min_price"));
 		System.out.println("=====>"+map.get("min_price"));
+		
 		Calendar calendar = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String ad = map.get("auction_date");
@@ -550,6 +551,79 @@ public class ItemController {
 		return new ResponseEntity<Result>(res, HttpStatus.OK);
 	}
 
+	@PostMapping("/resetdate")
+	public ResponseEntity<Result> rescheduleAuctionDate(HttpServletRequest request, @RequestBody Map<String, String> map) {
+		User user = (User) request.getSession().getAttribute("user");
+		Result result = new Result();
+		result.setAnswer("fail");
+		if (!user.getUsername().equals("admin")) {
+			result.setAnswer("Only admin authorized!");
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
+		}
+		
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		JSONObject object = new JSONObject();
+		object.put("itemid", map.get("itemid"));
+		Calendar calendar = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String ad = map.get("auction_date");
+		int index = Integer.parseInt(map.get("indextime"));
+		System.out.println("=====>"+map.get("indextime"));
+		Date date = null;
+		try {
+			date = sdf.parse(ad);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		calendar.setTime(date);
+		calendar.add(Calendar.MINUTE, index*20);
+		System.out.println("Seclect date:"+calendar.getTime());
+		object.put("auction_date", sdf.format(calendar.getTime()));
+		try {
+			// 第一步：创建HttpClient对象
+//			httpClient = HttpClients.createDefault();
+			// 第二步：创建httpPost对象
+			HttpPost httpPost = new HttpPost("http://localhost:8989/item/setime");
+
+			// 第三步：给httpPost设置JSON格式的参数
+			StringEntity requestEntity = new StringEntity(object.toString(), "utf-8");
+
+			requestEntity.setContentEncoding("UTF-8");
+			httpPost.setHeader("Content-type", "application/json");
+			httpPost.setEntity(requestEntity);
+			HttpResponse hr = httpClient.execute(httpPost); // responseHandler调接口获取返回值时，必须用此方法
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			// Response Body
+			String responseBody = responseHandler.handleResponse(hr);
+			if (responseBody != null && !responseBody.equals("")) {
+				Gson gson = new Gson();
+				try {
+					result = gson.fromJson(responseBody, Result.class);
+				} catch (JsonSyntaxException ex) {
+					// TODO: handle exception
+					ex.printStackTrace();
+				}
+				return new ResponseEntity<Result>(result, HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		finally {
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		Result res = new Result();
+		res.setAnswer("fail");
+		return new ResponseEntity<Result>(res, HttpStatus.OK);
+	}
+	
+	
 	// 請求deleteITEM
 	@DeleteMapping("/{itemid}")
 	public ResponseEntity<Result> deleteItem(@PathVariable("itemid") int itemid) {

@@ -1,5 +1,6 @@
 package utd.wpl.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 
 import java.io.File;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -77,6 +79,27 @@ public class UserController {
 			return new Date(l);
 		}
 	}
+	 
+	 class JsonByteDeserializer implements JsonDeserializer<byte[]> {
+		 	String username;
+			@Override
+			public byte[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+					throws JsonParseException {
+				// TODO Auto-generated method stub
+				String s = json.getAsJsonPrimitive().getAsString();
+				String file_path = "images/"+username+"_img"+".jpg";
+				if (ImageUtils.baseStrToImg(s.getBytes(), file_path)) {
+					return file_path.getBytes();
+				}
+				return null;
+			}
+			public String getUser() {
+				return username;
+			}
+			public void setUser(String suser) {
+				username = suser;
+			}
+		}
 
 	@PostMapping("/forgetpassword")
 	public ResponseEntity<Result> forgetPswd(User user) {
@@ -187,7 +210,15 @@ public class UserController {
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-
+	 public final static boolean isJSONValid2(String jsonInString ) {
+	        try {
+	            final ObjectMapper mapper = new ObjectMapper();
+	            mapper.readTree(jsonInString);
+	            return true;
+	        } catch (IOException e) {
+	            return false;
+	        }
+	    }
 	// 处理登录请求
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<Result> login(RequestEntity<User> entity, HttpServletRequest request) {
@@ -241,24 +272,36 @@ public class UserController {
 					// Gson gson1 = new Gson();
 					// Gson gson1 = new GsonBuilder().setDateFormat("yyyy-MM-dd
 					// HH:mm:ss.S").create();
-
-					Gson gson1 = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
-					User repUser = null;
-					try {
-						repUser = gson1.fromJson(responseBody1, User.class);
-						String file_path = "images/"+repUser.getUsername()+"_img"+".jpg";
-						if (ImageUtils.baseStrToImg(repUser.getPhoto(), file_path)) {
-							repUser.setPhoto(file_path.getBytes());
-						}
+//					JsonByteDeserializer jb = new JsonByteDeserializer();
+					
+//					jb.setUser(tmp.getUsername());
+//					Gson gson1 = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
+//					int index = responseBody.indexOf("\"photo\":\"");
+//					index += 8;
+					
+					User repUser = new User();
+					if (isJSONValid2(responseBody1)) {
+						JSONObject jsonObject = new JSONObject(responseBody1);
+						repUser.setUsername(jsonObject.getString("username"));
+						repUser.setEmail(jsonObject.getString("email"));
+						long l = jsonObject.getLong("last_visit");
+						repUser.setLast_visit(new Date(l));
+						repUser.setPassword(jsonObject.getString("password"));
+						repUser.setPhone(jsonObject.getString("phone"));
+						repUser.setUserid(jsonObject.getInt("userid"));
+						String img = jsonObject.getString("photo");
+						System.out.println(">>>>>>>"+img);
+//						String file_path = "/images/"+repUser.getUsername()+"_img.jpg";
+//						System.out.println("==>"+file_path);
+//						if (ImageUtils.baseStrToImg(img.getBytes(), file_path)) {
+						repUser.setPhoto(img.getBytes());
+//						}
 						System.out.println(
 								"Response From B:" + repUser.getUsername() + " date:" + repUser.getLast_visit());
+						
 						request.getSession().setAttribute("user", repUser);
-
 						result.setAnswer("Success");
-					} catch (JsonSyntaxException ex) {
-						// TODO: handle exception
-						ex.printStackTrace();
-					}
+					} 
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -341,14 +384,43 @@ public class UserController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<Result> register(HttpServletRequest request, String confirmPass ,User user, @RequestPart("pic") MultipartFile avator) throws IOException {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-		System.out.println("Leng====>"+user.getPhoto().length);
+//		System.out.println("Leng====>"+user.getPhoto().length);
 		JSONObject object = new JSONObject();
 		object.put("username", user.getUsername());
 		object.put("password", user.getPassword());
 		object.put("email", user.getEmail());
 		object.put("phone", user.getPhone());
-		user.setPhoto(ImageUtils.imgToBaseStr(avator.getInputStream()));
-		object.put("photo", user.getPhoto());
+	        System.out.println(request.getServletPath());	
+	      //上传文件路径
+	        String fileName = avator.getOriginalFilename();
+			System.out.println("原始文件名:" + fileName);
+	 
+			// 新文件名
+			String newFileName = user.getUsername()+ "_" + fileName;
+//            String path = request.getServletContext().getRealPath("/images/");
+	        ServletContext sc = request.getSession().getServletContext();
+	        // 上传位置
+			String path = sc.getRealPath("/images") + "/"; // 设定文件保存的目录
+			File f = new File(path);
+			if (!f.exists())
+				f.mkdirs();
+			if (!path.isEmpty()) {
+				try {
+					FileOutputStream fos = new FileOutputStream(path + newFileName);
+					InputStream in = avator.getInputStream();
+					int b = 0;
+					while ((b = in.read()) != -1) {
+						fos.write(b);
+					}
+					fos.close();
+					in.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			object.put("photo", (path + newFileName).getBytes());
+	 
+		
 		try {
 			// 第一步：创建HttpClient对象
 			// httpClient = HttpClients.createDefault();
