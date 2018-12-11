@@ -56,4 +56,8 @@ public class mainController {
 		public String profile() {
 			return "profile";
 		} 
+		@GetMapping("/manage")
+		public String manage() {
+			return "manage";
+		}
 }

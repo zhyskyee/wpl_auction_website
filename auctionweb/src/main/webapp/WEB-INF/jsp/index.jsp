@@ -136,7 +136,7 @@
                 <p>Bid Your Price:</p><input class="form-control" type="number" min="0" id="price">
                 <div class="col-lg-12 col-sm-12">
                     <div class="thumbnail">
-                       <img src="">
+                       <img  id="biditemimg" src="">
                     </div>
                 <br><br>
                 <p id="bidmessage"></p><p id="mybidprice"></p>

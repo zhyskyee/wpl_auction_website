@@ -19,6 +19,7 @@
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/profile.js"></script>
   <!-- Custom CSS -->
   <style>
   body {
@@ -75,7 +76,7 @@
         <!-- left column -->
         <div class="col-md-3">
           <div class="text-center">
-            <img src="images/home_page.jpg" class="avatar img-circle" alt="avatar">
+            <img src="" id="pic" class="avatar img-circle" alt="avatar" style="width:100px;height:100px;">
             <h6>Upload a different photo...</h6>
 
             <input type="file" class="form-control">
@@ -90,37 +91,25 @@
             <div class="form-group">
               <label class="col-md-3 control-label">Username:</label>
               <div class="col-md-8">
-                <input class="form-control" type="text" value="<%=curUser.getUsername() %>" required>
+                <input class="form-control" id="username" type="text" value="" required>
               </div>
             </div>
             <div class="form-group">
               <label class="col-lg-3 control-label">Email:</label>
               <div class="col-lg-8">
-                <input class="form-control" type="email" value="<%=curUser.getEmail() %>" required>
+                <input class="form-control" type="email" id="email" value="<%=curUser.getEmail() %>" required>
               </div>
             </div>
             <div class="form-group">
               <label class="col-lg-3 control-label">Phone:</label>
               <div class="col-lg-8">
-                <input class="form-control" type="tel" value="<%=curUser.getPhone() %>" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-md-3 control-label">Password:</label>
-              <div class="col-md-8">
-                <input class="form-control" type="password" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-md-3 control-label">Confirm password:</label>
-              <div class="col-md-8">
-                <input class="form-control" type="password" required>
+                <input class="form-control" type="tel" id="phone" value="<%=curUser.getPhone() %>" required>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-3 control-label"></label>
               <div class="col-md-8">
-                <input type="button" class="btn btn-primary" value="Save Changes">
+                <input type="button" class="btn btn-primary" id="change" value="Save Changes">
                 <span></span>
                 <input type="reset" class="btn btn-default" value="Cancel">
               </div>

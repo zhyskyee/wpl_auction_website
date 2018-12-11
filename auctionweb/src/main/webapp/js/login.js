@@ -287,6 +287,7 @@ $(document)
 						// 定时发送请求
 						setInterval(
 								function() {
+
 									var now = (new Date()).toLocaleString();
 									$
 											.ajax({
@@ -372,6 +373,8 @@ $(document)
 																.text(
 																		localStorage
 																				.getItem("ownerid"));
+														var src ="/images/"+ localStorage.getItem("title")+".jpg";
+														$("#biditemimg").attr("src", src);
 													}
 												},
 												error : function(err) {

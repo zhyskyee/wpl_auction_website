@@ -293,7 +293,7 @@
 		              <SSLEnabled>true</SSLEnabled>
 		              <clientAuth>false</clientAuth> 
 		              <sslProtocol>TLS</sslProtocol>
-		              <redirectPort>8443</redirectPort>
+		             <!--  <redirectPort>8443</redirectPort> -->
 				</configuration>
 			</plugin>
 			<!-- java编译插件 -->
