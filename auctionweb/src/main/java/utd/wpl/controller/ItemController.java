@@ -1,7 +1,11 @@
 package utd.wpl.controller;
 import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jms.Destination;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.camel.language.Simple;
@@ -303,10 +308,10 @@ public class ItemController {
 				Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
 				try {
 					item = gson.fromJson(responseBody, Item.class);
-					String file_path = "images/"+item.getTitle()+"_img"+".jpg";
-					if (ImageUtils.baseStrToImg(item.getPhoto(), file_path)) {
-						item.setPhoto(file_path.getBytes());
-					}
+//					String file_path = "images/"+item.getTitle()+"_img"+".jpg";
+//					if (ImageUtils.baseStrToImg(item.getPhoto(), file_path)) {
+//						item.setPhoto(file_path.getBytes());
+//					}
 				} catch (JsonSyntaxException ex) {
 					// TODO: handle exception
 					ex.printStackTrace();
@@ -479,8 +484,36 @@ public class ItemController {
 		System.out.println("=====>"+map.get("address"));
 		object.put("description", map.get("description"));
 		System.out.println("=====>"+map.get("description"));
-	
-		object.put("photo", ImageUtils.imgToBaseStr(avator.getInputStream()));
+		 System.out.println(request.getServletPath());	
+	      //上传文件路径
+	        String fileName = avator.getOriginalFilename();
+			System.out.println("原始文件名:" + fileName);
+	 
+			// 新文件名
+			String newFileName = map.get("title")+ "_" + fileName;
+//           String path = request.getServletContext().getRealPath("/images/");
+	        ServletContext sc = request.getSession().getServletContext();
+	        // 上传位置
+			String path = sc.getRealPath("/images") + "/"; // 设定文件保存的目录
+			File f = new File(path);
+			if (!f.exists())
+				f.mkdirs();
+			if (!path.isEmpty()) {
+				try {
+					FileOutputStream fos = new FileOutputStream(path + newFileName);
+					InputStream in = avator.getInputStream();
+					int b = 0;
+					while ((b = in.read()) != -1) {
+						fos.write(b);
+					}
+					fos.close();
+					in.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			object.put("photo", (path + newFileName).getBytes());
+//		object.put("photo", ImageUtils.imgToBaseStr(avator.getInputStream()));
 		System.out.println("=====>"+map.get("photo"));
 //		object.put("auction_date", map.get("auction_date"));
 		User owner = (User) request.getSession().getAttribute("user");

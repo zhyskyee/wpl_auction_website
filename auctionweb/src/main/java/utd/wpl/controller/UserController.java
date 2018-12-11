@@ -158,11 +158,67 @@ public class UserController {
 		}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-
-	@GetMapping("/profile")
-	public ResponseEntity<User> showProfile(RequestEntity<User> entity) {
+	
+	@PostMapping("/profile")
+	public ResponseEntity<Result> updateProfile(RequestEntity<User> entity) {
 		User tmp = entity.getBody();
-		System.out.println("Username:" + tmp.getUsername() + "    Pswd:" + tmp.getPassword());
+		System.out.println("Username:" + tmp.getUsername());
+		JSONObject object = new JSONObject();
+		object.put("username", tmp.getUsername());
+		object.put("email", tmp.getEmail());
+		object.put("phone", tmp.getPhone());
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		Result result = new Result();
+		result.setAnswer("fail");
+		// ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		try {
+			// 第一步：创建HttpClient对象
+			// httpClient = HttpClients.createDefault();
+			// 第二步：创建httpPost对象
+			HttpPost httpPost = new HttpPost("http://localhost:8989/user/profile");
+			// 第四步：发送HttpPost请求，获取返回值
+			// 第三步：给httpPost设置JSON格式的参数
+			StringEntity requestEntity = new StringEntity(object.toString(), "utf-8");
+
+			requestEntity.setContentEncoding("UTF-8");
+			httpPost.setHeader("Content-type", "application/json");
+			httpPost.setEntity(requestEntity);
+
+			HttpResponse hr = httpClient.execute(httpPost); // responseHandler调接口获取返回值时，必须用此方法
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			// Response Body
+			String responseBody = responseHandler.handleResponse(hr);
+			System.out.println("Result:" + responseBody);
+			Gson gson = new Gson();
+			
+			try {
+				result = gson.fromJson(responseBody, Result.class);
+				System.out.println("Response From B:"+responseBody);
+				
+			} catch (JsonSyntaxException ex) {
+				// TODO: handle exception
+				ex.printStackTrace();
+			}
+			return new ResponseEntity<Result>(result, HttpStatus.OK);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		finally {
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	@GetMapping("/profile")
+	public ResponseEntity<User> showProfile(@RequestParam("username") String username) {
+//		User tmp = entity.getBody();
+		System.out.println("Username:" + username);
 
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 
@@ -171,7 +227,7 @@ public class UserController {
 			// 第一步：创建HttpClient对象
 			// httpClient = HttpClients.createDefault();
 			// 第二步：创建httpPost对象
-			HttpGet httpGet = new HttpGet("http://localhost:8989/user/" + tmp.getUsername());
+			HttpGet httpGet = new HttpGet("http://localhost:8989/user/"+username);
 			// 第四步：发送HttpPost请求，获取返回值
 			HttpResponse hr = httpClient.execute(httpGet); // responseHandler调接口获取返回值时，必须用此方法
 			ResponseHandler<String> responseHandler = new BasicResponseHandler();
@@ -182,11 +238,11 @@ public class UserController {
 			User repUser = null;
 			try {
 				repUser = gson.fromJson(responseBody, User.class);
-				String imgPathStr = "/images/"+repUser.getUsername()+"_photo.jpg";
-				if (ImageUtils.baseStrToImg(repUser.getPhoto(), imgPathStr)) {
-					//保存图片成功！
-					repUser.setPhoto(imgPathStr.getBytes());
-				}
+//				String imgPathStr = "/images/"+repUser.getUsername()+"_photo.jpg";
+//				if (ImageUtils.baseStrToImg(repUser.getPhoto(), imgPathStr)) {
+//					//保存图片成功！
+//					repUser.setPhoto(imgPathStr.getBytes());
+//				}
 				System.out.println("Response From B:" + repUser.getUsername());
 				repUser.setPassword(null);
 			} catch (JsonSyntaxException ex) {

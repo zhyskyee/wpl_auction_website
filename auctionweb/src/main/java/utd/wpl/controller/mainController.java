@@ -51,4 +51,9 @@ public class mainController {
 		public String showAllItems() {
 			return "all";
 		} 
+		
+		@GetMapping("/profile")
+		public String profile() {
+			return "profile";
+		} 
 }
