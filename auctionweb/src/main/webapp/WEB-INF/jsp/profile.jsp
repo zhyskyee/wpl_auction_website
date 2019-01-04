@@ -97,13 +97,13 @@
             <div class="form-group">
               <label class="col-lg-3 control-label">Email:</label>
               <div class="col-lg-8">
-                <input class="form-control" type="email" id="email" value="<%=curUser.getEmail() %>" required>
+                <input class="form-control" type="email" id="email" value="" required>
               </div>
             </div>
             <div class="form-group">
               <label class="col-lg-3 control-label">Phone:</label>
               <div class="col-lg-8">
-                <input class="form-control" type="tel" id="phone" value="<%=curUser.getPhone() %>" required>
+                <input class="form-control" type="tel" id="phone" value="" required>
               </div>
             </div>
             <div class="form-group">

@@ -1,4 +1,4 @@
-localStorage.setItem("state",0);
+
 $(document)
 		.ready(
 				function() {
@@ -287,8 +287,12 @@ $(document)
 						// 定时发送请求
 						setInterval(
 								function() {
-
 									var now = (new Date()).toLocaleString();
+									if (localStorage.getItem("username") == "admin") {
+										$("#manage").css('display', 'block');
+									}
+									var src ="/images/"+ localStorage.getItem("title")+".jpg";
+									$("#itemimg").attr("src", src);
 									$
 											.ajax({
 												url : "http://localhost:8080/item/curitem",
@@ -349,9 +353,12 @@ $(document)
 																.setItem(
 																		"deal_price",
 																		datajson.deal_Price);
+														console.log("wa"+localStorage
+																.getItem("deal_price"));
+														console.log(datajson.deal_Price);
 
 														$("#deal_price")
-																.text(
+																.innerHTML(
 																		localStorage
 																				.getItem("deal_price"));
 														console
@@ -373,8 +380,6 @@ $(document)
 																.text(
 																		localStorage
 																				.getItem("ownerid"));
-														var src ="/images/"+ localStorage.getItem("title")+".jpg";
-														$("#biditemimg").attr("src", src);
 													}
 												},
 												error : function(err) {
@@ -382,5 +387,5 @@ $(document)
 													//		    						alert("Error loading JS File"+ err);
 												}
 											});
-								}, 60000);
+								}, 5000);
 					}

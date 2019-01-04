@@ -1,18 +1,17 @@
 $(document).ready(function() {
 
-	$("#resetbutton").click(
-			var username = $("#username").val();
+	$("#resetbutton").click(function(e) {
+		e.preventDefault();
+			
 			var password = $("#password").val();
-
+            var username = $("#username").val();
+            var tourl = "http://localhost:8080/user/forgetpassword"+"?username="+username+"&password="+password;
 			$.ajax({
-				url : "http://localhost:8080/user/forgetpassword",
+				url : tourl,
 				type : 'post',
 				dataType : 'text',
 				contentType : "application/json;charset=utf-8",
-				data : JSON.stringify({
-					'username' : username,
-					'password' : password
-				}),
+
 				success : function(data) {
 					console.log(data);
 					var datajson = JSON.parse(data);
@@ -26,6 +25,7 @@ $(document).ready(function() {
 							+ err);
 				}
 			});
+	})
 	
 	//监听回车键
 	$(document).keyup(function(event){

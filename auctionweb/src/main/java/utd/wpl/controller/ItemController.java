@@ -148,6 +148,11 @@ public class ItemController {
 	@PostMapping(value = "/bid")
 	public ResponseEntity<Result> bidForItem(@RequestBody Map map, HttpServletRequest request) {
 		User fUser = (User) request.getSession().getAttribute("user");
+		if (fUser == null) {
+			System.out.println("========><+++++++++++");
+		} else {
+			System.out.println("!!!!!!"+fUser.getUsername());
+		}
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("itemid", map.get("itemid"));
 		jsonObject.put("bidderid", fUser.getUserid());
@@ -279,7 +284,7 @@ public class ItemController {
 	}
 	
 	@GetMapping("/curitem")
-	public ResponseEntity<Item> getCurItem(HttpServletRequest request) {
+	public String getCurItem(HttpServletRequest request) {
 //		System.out.println("-----====>"+map.get("date"));
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date = sdf.format(new Date());
@@ -302,22 +307,22 @@ public class ItemController {
 			
 			String responseBody = responseHandler.handleResponse(hr);
 			System.out.println("A from B: responseBody:"+responseBody);
-//			return responseBody;
-			if (responseBody != null && !responseBody.equals("")) {
-				Item item = null;
-				Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
-				try {
-					item = gson.fromJson(responseBody, Item.class);
-//					String file_path = "images/"+item.getTitle()+"_img"+".jpg";
-//					if (ImageUtils.baseStrToImg(item.getPhoto(), file_path)) {
-//						item.setPhoto(file_path.getBytes());
-//					}
-				} catch (JsonSyntaxException ex) {
-					// TODO: handle exception
-					ex.printStackTrace();
-				}
-				return new ResponseEntity<Item>(item, HttpStatus.OK);
-			}
+			return responseBody;
+//			if (responseBody != null && !responseBody.equals("")) {
+//				Item item = null;
+//				Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
+//				try {
+//					item = gson.fromJson(responseBody, Item.class);
+////					String file_path = "images/"+item.getTitle()+"_img"+".jpg";
+////					if (ImageUtils.baseStrToImg(item.getPhoto(), file_path)) {
+////						item.setPhoto(file_path.getBytes());
+////					}
+//				} catch (JsonSyntaxException ex) {
+//					// TODO: handle exception
+//					ex.printStackTrace();
+//				}
+//				return new ResponseEntity<Item>(item, HttpStatus.OK);
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -475,22 +480,22 @@ public class ItemController {
 
 	// 請求postNewITEM
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public ResponseEntity<Result> postNewItem(HttpServletRequest request, @RequestPart("pic") MultipartFile avator, @RequestBody Map<String, String> map) throws JSONException, IOException {
+	public ResponseEntity<Result> postNewItem(HttpServletRequest request, @RequestPart("pic") MultipartFile avator, Item item, int indextime, String auctiondate) throws JSONException, IOException {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		JSONObject object = new JSONObject();
-		object.put("title", map.get("title"));
-		System.out.println("=====>"+map.get("title"));
-		object.put("address", map.get("address"));
-		System.out.println("=====>"+map.get("address"));
-		object.put("description", map.get("description"));
-		System.out.println("=====>"+map.get("description"));
+		object.put("title",item.getTitle());
+//		System.out.println("=====>"+map.get("title"));
+		object.put("address", item.getAddress());
+//		System.out.println("=====>"+map.get("address"));
+		object.put("description",item.getDescription());
+//		System.out.println("=====>"+map.get("description"));
 		 System.out.println(request.getServletPath());	
 	      //上传文件路径
 	        String fileName = avator.getOriginalFilename();
 			System.out.println("原始文件名:" + fileName);
 	 
 			// 新文件名
-			String newFileName = map.get("title")+ ".jpg";
+			String newFileName = item.getTitle()+ ".jpg";
 //           String path = request.getServletContext().getRealPath("/images/");
 	        ServletContext sc = request.getSession().getServletContext();
 	        // 上传位置
@@ -512,21 +517,21 @@ public class ItemController {
 					e.printStackTrace();
 				}
 			}
-			object.put("photo", (path + newFileName).getBytes());
+//			object.put("photo", (path + newFileName).getBytes());
 //		object.put("photo", ImageUtils.imgToBaseStr(avator.getInputStream()));
-		System.out.println("=====>"+map.get("photo"));
+//		System.out.println("=====>"+map.get("photo"));
 //		object.put("auction_date", map.get("auction_date"));
 		User owner = (User) request.getSession().getAttribute("user");
 		System.out.println("userid:"+owner.getUserid());
 		object.put("ownerid", String.valueOf(owner.getUserid()));
-		object.put("min_price", map.get("min_price"));
-		System.out.println("=====>"+map.get("min_price"));
+		object.put("min_price", item.getMin_price());
+//		System.out.println("=====>"+map.get("min_price"));
 		
 		Calendar calendar = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String ad = map.get("auction_date");
-		int index = Integer.parseInt(map.get("indextime"));
-		System.out.println("=====>"+map.get("indextime"));
+		String ad = auctiondate;
+		int index = indextime;
+//		System.out.println("=====>"+map.get("indextime"));
 		Date date = null;
 		try {
 			date = sdf.parse(ad);

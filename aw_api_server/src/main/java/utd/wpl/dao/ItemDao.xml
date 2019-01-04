@@ -40,7 +40,7 @@
 	</insert>
 	<!-- 3.更新最后访问时间 -->
 	<update id="updateItemAuctionDate">
-		update item set auction_date = #{newdate} where itemid = #{itemid}
+		update item set auction_date = #{date} where itemid = #{itemid}
 	</update>
 	<update id="updateItemOwner">
 		update item set ownerid = #{ownerid} where itemid = #{itemid}

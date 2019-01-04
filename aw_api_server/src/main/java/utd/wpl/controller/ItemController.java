@@ -223,7 +223,7 @@ public class ItemController {
 	}
 	
 	@PostMapping("/setime")
-	public ResponseEntity<Result> resetItemTime(@RequestParam Map<String, String> map) {
+	public ResponseEntity<Result> resetItemTime(@RequestBody Map<String, String> map) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		System.out.println("-------->"+map.get("itemid"));
 		int itemid = Integer.parseInt(map.get("itemid"));

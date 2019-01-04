@@ -22,5 +22,5 @@ public interface ItemDao {
 	Item findItemByItemAddress(@Param("address") String address);
 	Item findItemByItemId(@Param("itemid") int itemid);
 	int deleteItemByItemId(@Param("itemid") int itemid);
-	int updateItemAuctionDate(@Param("itemid") int itemid, @Param("date") Date newdate);
+	int updateItemAuctionDate(@Param("itemid") int itemid, @Param("date") Date date);
 }

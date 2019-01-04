@@ -44,7 +44,7 @@
               </a>
              </li>
            <%--  <c:if test="${sessionScope.user != null}"> --%>
-            <li class="nav-item" id="profile" style="display:none;">
+            <li class="nav-item">
               <a class="nav-link" href="${pageContext.request.contextPath}/profile">Profile</a>
             </li>
             <li class="nav-item" id="order" style="display:none;">
@@ -53,8 +53,8 @@
             <li class="nav-item" id="sell" style="display:none;">
               <a class="nav-link" href="${pageContext.request.contextPath}/sell">Sell</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="${pageContext.request.contextPath}/contact">Contact</a>
+            <li class="nav-item" id="manage" style="display:none;">
+              <a class="nav-link" href="${pageContext.request.contextPath}/manage">Manage</a>
             </li>
             <li class="nav-item">
               <p id="usernamshow"></p>
@@ -136,7 +136,7 @@
                 <p>Bid Your Price:</p><input class="form-control" type="number" min="0" id="price">
                 <div class="col-lg-12 col-sm-12">
                     <div class="thumbnail">
-                       <img  id="biditemimg" src="">
+                       <img id="itemimg" src="">
                     </div>
                 <br><br>
                 <p id="bidmessage"></p><p id="mybidprice"></p>

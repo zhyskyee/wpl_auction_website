@@ -1,8 +1,9 @@
 $(document).ready(function(){
+	
 	    var indextime="";
 		$("#search").click(function(e){
 			   e.preventDefault();
-		    var date = $("#auctiondate").val();
+		    var date = $("#auction_date1").val();
 			$.ajax({
             url: "http://localhost:8080/item/timeslots",
             type: 'get',
@@ -13,12 +14,12 @@ $(document).ready(function(){
              }),
              
             success: function(data) {
-                  console.log(data)
+                  console.log(data);
                   var datajson = JSON.parse(data);
                   var data2 = eval(datajson);
                   var myselect=document.getElementById("myselector");
                   indextime=myselect.selectedIndex ;
-                  console.log(index);
+              
                   for(i=0;i<24;i++){
                        if(data2[i].answer == 'false'){    
                     	   $("#"+i).hide();
@@ -32,23 +33,30 @@ $(document).ready(function(){
         });
 		});
         var myselect=document.getElementById("myselector");
+        
         indextime=myselect.selectedIndex ;
-		$("#indextime").val()=indextime;
+        console.log(indextime);
+		$("#indextime").val(indextime);
+		console.log($("#indextime").val());
         $("#submitbutton").click(function(){
 
     		var indextime=$("#myselector option:selected").attr("id");
-    		$("#indextime").val()=indextime;
+    		console.log(indextime);
+    		$("#indextime").val(indextime);
 //            var title = $("#title").val();
 //            var date = $("#auctiondate").val();
 //            var description= $("#description").val();
 //            var address= $("#address").val();
 //            var minimumprice= $("#minimumprice").val();
-            var date1= $("#auctiondate").val();
-            var date = date1 + " "+"08:00:00";
-            $("#auctiondate").val()=date;
+//            var date1= $("#auctiondate1").val();
+//            console.log(date1);
+//            var date = date1 + " "+"08:00:00";
+//            $("#auctiondate").val(date);
 //            var date = new Date();
-            
-            console.log(date);
+    		var date1 = $("#auction_date1").val();
+    		var date = date1 + " "+"08:00:00";
+    		$("#auctiondate").val(date);
+//            console.log($("#auctiondate").val());
 			$("#postForm").submit();
 			return true;
 //            var indextime=$("#myselector option:selected").attr("id");

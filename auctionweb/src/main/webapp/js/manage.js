@@ -3,12 +3,28 @@ $(document).ready(function() {
 			function(e) {
 				e.preventDefault();
 				var start_time1 = $("#start_time").val();
-				var end_time1(parseInt(start_time1))+1;
-				
+//				var end_time1=(parseInt(start_time1))+1;
+//				var end_time1 = start_time1.getFullYear()+"-" + (start_time1.getMonth()) + "-" + (1+ (start_time1.getDay())); 
 				start_time = start_time1 +" "+"00:00:00";
-				end_time = (end_time1).toString() +" "+"00:00:00";
+//				console.log(start_time1.getDay());
+//				end_time = (end_time1).toString() +" "+"00:00:00";
 				console.log(start_time1);
-				
+				console.log(start_time);
+//				console.log(end_time1);
+//				console.log(end_time);
+				function getNewDay(dateTemp, days) {
+				    var dateTemp = dateTemp.split("-");
+				    var nDate = new Date(dateTemp[1] + '-' + dateTemp[2] + '-' + dateTemp[0]); //转换为MM-DD-YYYY格式  
+				    var millSeconds = Math.abs(nDate) + (days * 24 * 60 * 60 * 1000);
+				    var rDate = new Date(millSeconds);
+				    var year = rDate.getFullYear();
+				    var month = rDate.getMonth() + 1;
+				    if (month < 10) month = "0" + month;
+				    var date = rDate.getDate();
+				    if (date < 10) date = "0" + date;
+				    return (year + "-" + month + "-" + date);
+				}
+			var end_time = (getNewDay(start_time1, 1)) +" "+"00:00:00" ;
 				$.ajax({
 					url : "http://localhost:8080/item/all",
 					type : 'get',
@@ -92,16 +108,20 @@ $(document).ready(function() {
 	$("#submitbutton").click(
 			function(e) {
 				e.preventDefault();
-				var itemid = $("#itemid").val();
+				var itemid = $("#selectitemid").val();
 				var start_time1 = $("#start_time").val();
 				var myselect=document.getElementById("myselector");
 		        var indextime=myselect.selectedIndex ;
 				console.log(itemid);
+				var start_time1 = $("#start_time").val();
+				console.log(start_time1);
+				start_time1 = start_time1+" "+"08:00:00";
+				console.log(start_time1);
 				$.ajax({
 					url : "http://localhost:8080/item/resetdate",
-					type : 'get',
+					type : 'post',
 					dataType : 'text',
-					data : ({
+					data :JSON.stringify({
 						'auction_date' : start_time1,
 						'itemid':itemid,
 						'indextime':indextime
@@ -112,7 +132,7 @@ $(document).ready(function() {
 					success : function(data) {
 						alert("success!");
 
-			            }
+			            
 			       
 					},
 					error : function(err) {

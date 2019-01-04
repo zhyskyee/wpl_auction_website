@@ -348,12 +348,6 @@ public class UserController {
 					// Gson gson1 = new Gson();
 					// Gson gson1 = new GsonBuilder().setDateFormat("yyyy-MM-dd
 					// HH:mm:ss.S").create();
-//					JsonByteDeserializer jb = new JsonByteDeserializer();
-					
-//					jb.setUser(tmp.getUsername());
-//					Gson gson1 = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
-//					int index = responseBody.indexOf("\"photo\":\"");
-//					index += 8;
 					
 					User repUser = new User();
 					if (isJSONValid2(responseBody1)) {
@@ -363,7 +357,8 @@ public class UserController {
 						long l = jsonObject.getLong("last_visit");
 						repUser.setLast_visit(new Date(l));
 						repUser.setPassword(jsonObject.getString("password"));
-						repUser.setPhone(jsonObject.getString("phone"));
+						System.out.println("=========>>>>>>"+jsonObject.get("phone"));
+						repUser.setPhone((String) jsonObject.get("phone"));
 						repUser.setUserid(jsonObject.getInt("userid"));
 						String img = jsonObject.getString("photo");
 						System.out.println(">>>>>>>"+img);

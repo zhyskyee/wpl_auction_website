@@ -82,44 +82,88 @@
         <!-- edit form column -->
         <div class="col-md-9">
           <h3 class="page-header"><b>Post item</b></h3>
+          
+          
+<form id="postForm" method="post" class="form-horizontal" role="form" accept-charset="UTF-8" action="${pageContext.request.contextPath}/item/new" enctype="multipart/form-data">
+					
+			
+					<div class="container border border-dark rounded" style="padding: 15px;">
+						<div class="form-group form-inline justify-content-center">
+							<div class="row">
+								<div class="small-12 medium-2 large-2 columns">
 
-          <form class="form-horizontal" role="form">
-            <div class="form-group">
-              <label class="col-3 control-label">Item Title</label>
-              <div class="col-8">
-                <input class="form-control" type="text" placeholder="Your item name..." id="title">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-3 control-label">Description</label>
-              <div class="col-8">
-                <input class="form-control" type="text"  id="description">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-3 control-label">Address</label>
-              <div class="col-8">
-                <textarea class="form-control" rows="5" placeholder="address" id="address"></textarea>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-4 control-label">Minimum Bidding Price(USD)</label>
-              <div class="col-8">
-                <input class="form-control" type="number" min="0" id="minimumprice">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-4 control-label">Picture</label>
-              <div class="col-8">
-                <input id="picture" type="file" accept="image/png,image/gif" name="file" />
-              </div>
-            </div>
-             <div class="form-group">
-              <label class="col-12 control-label">Select an auction date</label>
-              <div class="col-8">
+									<div class="p-image">
+										<i class="fa fa-camera upload-button"></i>
+										<input class="file-upload" type="file" accept="image/.jpg" name="pic" id="pic" />
+									</div>
+								</div>
+							</div>
+						</div>
+
+		              <div class="form-group">
+		              	<div class="row">
+		              		<label for="title" class="col-lg-4 col-form-label">Title:</label>
+		              		<div class="col-lg-8">
+		              			<input type="text" class="form-control" id="title" name="title" value="">
+		              		</div>
+		              	</div>
+		              </div>
+
+		              <div class="form-group">
+		              	<div class="row">
+		              		<label for="description" class="col-lg-4 col-form-label">Description:</label>
+		              		<div class="col-lg-8">
+		              			<input type="text" class="form-control" id="description" name="description">
+		              		</div>
+		              	</div>
+		              </div>
+
+		              <div class="form-group">
+		              	<div class="row">
+		              		<label for="address" class="col-lg-4 col-form-label">Address:</label>
+		              		<div class="col-lg-8">
+		              			<input type="text" class="form-control" id="address" name="address">
+		              		</div>
+		              	</div>
+		              </div>
+
+
+
+		              <div class="form-group">
+		              	<div class="row">
+		              		<label for="min_price" class="col-lg-4 col-form-label">Minimum Bidding Price(USD):</label>
+		              		<div class="col-lg-8">
+		              			<input type="number" class="form-control" id="min_price" name="min_price">
+		              		</div>
+		              	</div>
+		              </div>
+		              		              
+		              <div class="form-group">
+		              	<div class="row">
+		              		<label for="min_price" class="col-lg-4 col-form-label">Indextime:</label>
+		              		<div class="col-lg-8">
+		              			<input type="number" class="form-control" id="indextime" name="indextime">
+		              		</div>
+		              	</div>
+		              </div>
+		              
+		              	<div class="form-group">
+		              	<div class="row">
+		              		<label for="min_price" class="col-lg-4 col-form-label">Auction_date:</label>
+		              		<div class="col-lg-8">
+		              			<input type="text" class="form-control" id="auctiondate" name="auctiondate">
+		              		</div>
+		              	</div>
+		              </div>
+		              
+		             
+		              <button id="submitbutton" type="submit" class="btn btn-primary">Submit</button>
+		          </div>
+		      </form>
+		      
+		      <div class="col-8">
                   <div class="inline-block">
-                      <input id="auctiondate" class="form-control" type="date" />
-                      <br>
+                      <input type="date" class="form-control" id="auction_date1" name="auction_date1">
                       <button id="search" class="btn btn-info" style="float:right">Search</button></div>
                       <br><br> 
                       <div class="col-lg-12" id="selecttime" style="display: block;">
@@ -153,16 +197,9 @@
 
                       </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label class="col-3 control-label"></label>
-              <div class="col-8">
-                <input type="button" id="submitbutton" class="btn btn-primary" value="Submit">
-                <span></span>
-                <input type="reset" class="btn btn-danger" value="Clear">
-              </div>
-            </div>
-          </form>
+
+
+
         </div>
       </div>
     </div>
